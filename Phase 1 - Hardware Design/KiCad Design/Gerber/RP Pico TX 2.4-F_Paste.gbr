@@ -1,0 +1,26 @@
+%TF.GenerationSoftware,KiCad,Pcbnew,(6.0.6)*%
+%TF.CreationDate,2023-06-16T11:29:41+02:00*%
+%TF.ProjectId,RP Pico TX 2.4,52502050-6963-46f2-9054-5820322e342e,rev?*%
+%TF.SameCoordinates,Original*%
+%TF.FileFunction,Paste,Top*%
+%TF.FilePolarity,Positive*%
+%FSLAX46Y46*%
+G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
+G04 Created by KiCad (PCBNEW (6.0.6)) date 2023-06-16 11:29:41*
+%MOMM*%
+%LPD*%
+G01*
+G04 APERTURE LIST*
+%ADD10R,1.000000X1.000000*%
+%ADD11R,2.200000X1.050000*%
+G04 APERTURE END LIST*
+D10*
+%TO.C,J1*%
+X106300000Y-109575000D03*
+D11*
+X107800000Y-108100000D03*
+X107800000Y-111050000D03*
+D10*
+X109300000Y-109575000D03*
+%TD*%
+M02*
