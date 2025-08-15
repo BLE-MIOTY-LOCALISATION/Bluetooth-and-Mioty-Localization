@@ -48,7 +48,7 @@
       "drc_warnings",
       "shapes"
     ],
-    "visible_layers": "00000000_00000000_0fffffcf_ffffffff",
+    "visible_layers": "00000000_00000000_0fffffcd_dfff7f73",
     "zone_display_mode": 0
   },
   "git": {
@@ -58,11 +58,13 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "RP Pico TX 2.4.kicad_prl",
+    "filename": "BLE MIOTY MODULE.kicad_prl",
     "version": 5
   },
   "net_inspector_panel": {
     "col_hidden": [
+      false,
+      false,
       false,
       false,
       false,
@@ -84,17 +86,21 @@
       6,
       7,
       8,
-      9
+      9,
+      10,
+      11
     ],
     "col_widths": [
-      162,
-      147,
+      148,
+      138,
       91,
-      67,
+      61,
       91,
       91,
       91,
-      71,
+      65,
+      91,
+      91,
       91,
       91
     ],

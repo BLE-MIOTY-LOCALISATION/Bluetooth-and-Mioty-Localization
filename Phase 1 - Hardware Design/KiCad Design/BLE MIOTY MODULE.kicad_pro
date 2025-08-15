@@ -59,16 +59,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        [
-          "clearance|108900000|112875000|6b78ce5c-504b-4514-a4da-5d7ca54b26c1|f3089fbf-2eff-4b47-a72f-a3c419776b62",
-          ""
-        ],
-        [
-          "clearance|110550000|113125000|e5d1c398-c993-4ef7-b99b-d6ce17325d2f|f3089fbf-2eff-4b47-a72f-a3c419776b62",
-          ""
-        ]
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -482,7 +473,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "RP Pico TX 2.4.kicad_pro",
+    "filename": "BLE MIOTY MODULE.kicad_pro",
     "version": 3
   },
   "net_settings": {
