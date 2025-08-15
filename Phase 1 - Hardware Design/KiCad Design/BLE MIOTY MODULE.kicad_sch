@@ -8827,7 +8827,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "10u"
 			(at 209.296 218.948 0)
 			(effects
 				(font
@@ -10312,7 +10312,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "10u"
 			(at 241.046 218.948 0)
 			(effects
 				(font
