@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.85,
-          "height": 2.0,
-          "width": 1.6
+          "drill": 0.0,
+          "height": 0.95,
+          "width": 0.8
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -194,7 +194,7 @@
       ],
       "track_widths": [
         0.0,
-        0.5,
+        0.2,
         1.0
       ],
       "tuning_pattern_settings": {
