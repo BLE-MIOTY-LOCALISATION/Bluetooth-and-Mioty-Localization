@@ -3381,184 +3381,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Regulator_Linear:AP2112K-1.8"
-			(pin_names
-				(offset 0.254)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "U"
-				(at -5.08 5.715 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "AP2112K-1.8"
-				(at 0 5.715 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
-				(at 0 8.255 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.diodes.com/assets/Datasheets/AP2112.pdf"
-				(at 0 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "600mA low dropout linear regulator, with enable pin, 2.5V-6V input voltage range, 1.8V fixed positive output, SOT-23-5"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "linear regulator ldo fixed positive"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "SOT?23?5*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "AP2112K-1.8_0_1"
-				(rectangle
-					(start -5.08 4.445)
-					(end 5.08 -5.08)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-			)
-			(symbol "AP2112K-1.8_1_1"
-				(pin power_in line
-					(at -7.62 2.54 0)
-					(length 2.54)
-					(name "VIN"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -7.62 0 0)
-					(length 2.54)
-					(name "EN"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 -7.62 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin no_connect line
-					(at 5.08 0 180)
-					(length 2.54)
-					(hide yes)
-					(name "NC"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 7.62 2.54 180)
-					(length 2.54)
-					(name "VOUT"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "SX1280IMLTRT:SX1280IMLTRT"
 			(pin_names
 				(offset 1.016)
@@ -4864,8 +4686,8 @@
 		(uuid 4dc970ed-7f9d-403f-9c0c-40b27207b630)
 	)
 	(rectangle
-		(start 43.18 46.99)
-		(end 102.87 74.93)
+		(start 57.15 34.29)
+		(end 87.63 62.23)
 		(stroke
 			(width 0)
 			(type default)
@@ -4967,7 +4789,7 @@
 	)
 	(text "Power Supply"
 		(exclude_from_sim no)
-		(at 71.374 76.708 0)
+		(at 71.882 64.262 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -5028,12 +4850,6 @@
 		(uuid "0d155c5b-fdbc-4bc9-888a-d0febf41230a")
 	)
 	(junction
-		(at 85.09 189.23)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "0e23601d-945d-41f3-90b5-926a8880cf82")
-	)
-	(junction
 		(at 247.65 101.6)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5082,22 +4898,10 @@
 		(uuid "4ff59664-8097-461e-a9ae-49959e6f996c")
 	)
 	(junction
-		(at 58.42 68.58)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "5456df05-604d-44f8-80e7-92968d6fd4aa")
-	)
-	(junction
 		(at 83.82 219.71)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5fcbaf75-df9f-4911-a417-a0e672f35880")
-	)
-	(junction
-		(at 85.09 171.45)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "67eca07c-4164-416f-88a3-5efe133d440a")
 	)
 	(junction
 		(at 63.5 208.28)
@@ -5172,6 +4976,12 @@
 		(uuid "9a67d2d1-41c1-46f9-8092-ec99c6d42ab1")
 	)
 	(junction
+		(at 241.3 165.1)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a6a3776a-7b5f-40be-b706-e130c1c30a86")
+	)
+	(junction
 		(at 72.39 189.23)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5190,7 +5000,7 @@
 		(uuid "b6537f28-a8cf-4e5e-a96d-fa8be4fb9c2c")
 	)
 	(junction
-		(at 58.42 58.42)
+		(at 72.39 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b81ab751-efce-4be6-b5ff-3f78a6ddc5a4")
@@ -5284,10 +5094,6 @@
 		(uuid "d3657fbc-8bdb-4347-b81b-15467fe4d9ba")
 	)
 	(no_connect
-		(at 275.59 179.07)
-		(uuid "e278d22b-46f3-48f8-953b-3bb960f43abc")
-	)
-	(no_connect
 		(at 165.1 173.99)
 		(uuid "e36bef21-11f2-438c-9559-a49cb8a15e47")
 	)
@@ -5314,6 +5120,16 @@
 			(type default)
 		)
 		(uuid "015be41a-5304-4d9d-9999-39367bd86781")
+	)
+	(wire
+		(pts
+			(xy 245.11 181.61) (xy 241.3 181.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0386a465-9ba1-49b6-8dc7-5da157873a11")
 	)
 	(wire
 		(pts
@@ -5357,16 +5173,6 @@
 	)
 	(wire
 		(pts
-			(xy 80.01 68.58) (xy 80.01 64.77)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0d72ef6f-b9fb-49e9-a965-1f11997757e6")
-	)
-	(wire
-		(pts
 			(xy 248.92 93.98) (xy 247.65 93.98)
 		)
 		(stroke
@@ -5377,13 +5183,23 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 54.61) (xy 58.42 58.42)
+			(xy 72.39 41.91) (xy 72.39 45.72)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "0d931250-00dc-40a8-99ad-8863b2135fd0")
+	)
+	(wire
+		(pts
+			(xy 194.31 106.68) (xy 196.85 106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0e28062c-c995-4ba5-9de9-f6f583dde07d")
 	)
 	(wire
 		(pts
@@ -5437,7 +5253,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 58.42) (xy 60.96 58.42)
+			(xy 72.39 45.72) (xy 74.93 45.72)
 		)
 		(stroke
 			(width 0)
@@ -5474,16 +5290,6 @@
 			(type default)
 		)
 		(uuid "20504f53-8451-4eea-8cc9-97e2ac193604")
-	)
-	(wire
-		(pts
-			(xy 72.39 189.23) (xy 85.09 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "216b5646-d6bb-496d-8d5b-1faf2c915677")
 	)
 	(wire
 		(pts
@@ -5527,16 +5333,6 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 68.58) (xy 80.01 68.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2fa92a1f-2b4a-4c4f-b479-4c2f56d36b36")
-	)
-	(wire
-		(pts
 			(xy 247.65 106.68) (xy 259.08 106.68)
 		)
 		(stroke
@@ -5574,6 +5370,16 @@
 			(type default)
 		)
 		(uuid "390cd0ea-e60c-46e5-916d-aceed3aa1d94")
+	)
+	(wire
+		(pts
+			(xy 241.3 165.1) (xy 242.57 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3a3234b6-82f8-47d7-ba19-cac7d44a5f03")
 	)
 	(wire
 		(pts
@@ -5634,16 +5440,6 @@
 			(type default)
 		)
 		(uuid "46f88d60-2554-4f6c-958d-c944c9d244c1")
-	)
-	(wire
-		(pts
-			(xy 85.09 171.45) (xy 85.09 175.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4a9208a4-e846-42f6-9f29-585de04d96ea")
 	)
 	(wire
 		(pts
@@ -5777,7 +5573,7 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 189.23) (xy 95.25 189.23)
+			(xy 72.39 189.23) (xy 95.25 189.23)
 		)
 		(stroke
 			(width 0)
@@ -5837,7 +5633,7 @@
 	)
 	(wire
 		(pts
-			(xy 234.95 165.1) (xy 242.57 165.1)
+			(xy 234.95 165.1) (xy 241.3 165.1)
 		)
 		(stroke
 			(width 0)
@@ -5854,16 +5650,6 @@
 			(type default)
 		)
 		(uuid "713c9834-d22a-40e2-bedf-e485d83067c1")
-	)
-	(wire
-		(pts
-			(xy 72.39 171.45) (xy 85.09 171.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "720e453e-2131-4560-9ddd-11b818bbc74c")
 	)
 	(wire
 		(pts
@@ -6087,6 +5873,16 @@
 	)
 	(wire
 		(pts
+			(xy 241.3 181.61) (xy 241.3 165.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a4aec466-47b5-46aa-9486-0cd95439b7d7")
+	)
+	(wire
+		(pts
 			(xy 83.82 219.71) (xy 95.25 219.71)
 		)
 		(stroke
@@ -6107,6 +5903,16 @@
 	)
 	(wire
 		(pts
+			(xy 204.47 106.68) (xy 207.01 106.68)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ad59e5a9-a99d-40bd-bac0-5b12b1b729bb")
+	)
+	(wire
+		(pts
 			(xy 207.01 130.81) (xy 196.85 130.81)
 		)
 		(stroke
@@ -6117,7 +5923,7 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 171.45) (xy 95.25 171.45)
+			(xy 72.39 171.45) (xy 95.25 171.45)
 		)
 		(stroke
 			(width 0)
@@ -6184,16 +5990,6 @@
 			(type default)
 		)
 		(uuid "bea389dc-f16c-4a68-b0eb-86a99b1643b8")
-	)
-	(wire
-		(pts
-			(xy 85.09 182.88) (xy 85.09 189.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c00fbadc-aa13-4cf4-a573-6a850158257b")
 	)
 	(wire
 		(pts
@@ -6327,7 +6123,7 @@
 	)
 	(wire
 		(pts
-			(xy 55.88 58.42) (xy 58.42 58.42)
+			(xy 69.85 45.72) (xy 72.39 45.72)
 		)
 		(stroke
 			(width 0)
@@ -6437,16 +6233,6 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 54.61) (xy 72.39 54.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f67343d3-9bd7-469b-abcd-5767b63b31aa")
-	)
-	(wire
-		(pts
 			(xy 163.83 73.66) (xy 167.64 73.66)
 		)
 		(stroke
@@ -6537,7 +6323,7 @@
 	)
 	(global_label "VCC, 3.3V"
 		(shape input)
-		(at 58.42 54.61 180)
+		(at 72.39 41.91 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6547,7 +6333,7 @@
 		)
 		(uuid "0297642a-7724-44ff-b0fd-b91bcb5fcc64")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 46.1214 54.61 0)
+			(at 60.0914 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6636,28 +6422,6 @@
 		(uuid "0d008093-9adc-4e33-8910-e14e4b88ffcd")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 122.9867 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "LDO_EN"
-		(shape input)
-		(at 72.39 57.15 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "0e37a0d8-4d43-4caf-9a72-2202f36ebe45")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 62.3291 57.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6779,7 +6543,7 @@
 	)
 	(global_label "NRST"
 		(shape input)
-		(at 207.01 106.68 180)
+		(at 194.31 106.68 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6789,34 +6553,12 @@
 		)
 		(uuid "22f79bd7-4414-46ff-ad60-b8666e1c05b2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 199.2472 106.68 0)
+			(at 186.5472 106.68 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "VDDIO"
-		(shape input)
-		(at 87.63 54.61 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "2744e6af-47bd-4d61-b941-23e9b5567fdf")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 96.1791 54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 				(hide yes)
 			)
 		)
@@ -7836,7 +7578,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 66.04 170.4848 0)
 			(effects
 				(font
@@ -7897,7 +7639,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "0"
+		(property "Value" "0.8p"
 			(at 199.771 170.6122 0)
 			(effects
 				(font
@@ -7906,7 +7648,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 195.8848 165.1 0)
 			(effects
 				(font
@@ -7924,7 +7666,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "GRM1555C1HR80BA01D"
 			(at 196.85 168.91 0)
 			(effects
 				(font
@@ -8106,7 +7848,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 278.4348 99.06 0)
 			(effects
 				(font
@@ -8124,7 +7866,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
+		(property "Description" "GRM155R71C104KA88D"
 			(at 279.4 102.87 0)
 			(effects
 				(font
@@ -8451,7 +8193,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 73.66 218.7448 0)
 			(effects
 				(font
@@ -8650,7 +8392,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 260.0452 116.84 0)
 			(effects
 				(font
@@ -8668,7 +8410,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
+		(property "Description" "GRM155R61A474KE15D"
 			(at 259.08 113.03 0)
 			(effects
 				(font
@@ -8753,76 +8495,6 @@
 			(project "BLE MIOTY MODULE_v2"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "#PWR027")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 85.09 179.07 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "316a5e58-56d2-4ffc-a079-9a40ea9a1dbd")
-		(property "Reference" "R1"
-			(at 87.63 177.7999 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "1M"
-			(at 87.63 180.3399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 86.868 179.07 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 85.09 179.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 85.09 179.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3b3f0f7c-606a-4f35-bc54-067f4edb8a35")
-		)
-		(pin "2"
-			(uuid "096a1b7d-f48b-4e27-8f10-c9888b6f7fff")
-		)
-		(instances
-			(project "RP Pico TX 2.4"
-				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "R1")
 					(unit 1)
 				)
 			)
@@ -9072,7 +8744,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Two pin crystal"
+		(property "Description" "Crystal_SMD_2012-2Pin_2.0x1.2mm_HandSoldering"
 			(at 83.82 210.82 0)
 			(effects
 				(font
@@ -9299,7 +8971,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Conn_Coaxial")
-		(at 280.67 179.07 0)
+		(at 250.19 181.61 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9308,7 +8980,7 @@
 		(fields_autoplaced yes)
 		(uuid "582de600-b9ba-427a-adad-5b6327cfa659")
 		(property "Reference" "J1"
-			(at 283.21 178.5285 0)
+			(at 252.73 181.0685 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9317,7 +8989,7 @@
 			)
 		)
 		(property "Value" "Conn_Coaxial"
-			(at 283.21 181.0654 0)
+			(at 252.73 183.6054 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9326,7 +8998,7 @@
 			)
 		)
 		(property "Footprint" "Connector_Coaxial:U.FL_Molex_MCRF_73412-0110_Vertical"
-			(at 280.67 179.07 0)
+			(at 250.19 181.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9335,7 +9007,7 @@
 			)
 		)
 		(property "Datasheet" " ~"
-			(at 280.67 179.07 0)
+			(at 250.19 181.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9344,7 +9016,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 280.67 179.07 0)
+			(at 250.19 181.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9465,7 +9137,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 252.73 109.22 0)
 			(effects
 				(font
@@ -9483,7 +9155,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Inductor"
+		(property "Description" "MLZ2012M150W"
 			(at 252.73 109.22 0)
 			(effects
 				(font
@@ -9553,7 +9225,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Two pin crystal"
+		(property "Description" "Crystal_SMD_3225-4Pin_3.2x2.5mm"
 			(at 72.39 179.07 0)
 			(effects
 				(font
@@ -9860,7 +9532,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 247.9548 83.82 0)
 			(effects
 				(font
@@ -9878,7 +9550,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
+		(property "Description" "GRM155R71E103KA01D"
 			(at 248.92 87.63 0)
 			(effects
 				(font
@@ -9972,83 +9644,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Regulator_Linear:AP2112K-1.8")
-		(at 80.01 57.15 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "824991ae-c595-48a1-a57f-3b553abceda7")
-		(property "Reference" "U1"
-			(at 80.01 48.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "AP2112K-1.8"
-			(at 80.01 50.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-5"
-			(at 80.01 48.895 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/AP2112.pdf"
-			(at 80.01 54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "600mA low dropout linear regulator, with enable pin, 2.5V-6V input voltage range, 1.8V fixed positive output, SOT-23-5"
-			(at 80.01 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "3"
-			(uuid "94e505c7-6685-404c-a7ae-e3b7d5a258dd")
-		)
-		(pin "2"
-			(uuid "5d296d1e-1769-426c-bfe7-b6212657bd12")
-		)
-		(pin "5"
-			(uuid "fc5f2a41-b20a-4de1-93ab-4108c99dc6e7")
-		)
-		(pin "4"
-			(uuid "442e6657-a0a0-4d75-8646-d8e1f3148b27")
-		)
-		(pin "1"
-			(uuid "01f73907-a281-4f83-ac22-b99942512b5f")
-		)
-		(instances
-			(project ""
-				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "U1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 215.9 172.72 0)
 		(unit 1)
@@ -10132,7 +9727,7 @@
 				)
 			)
 		)
-		(property "Value" "0"
+		(property "Value" "100p"
 			(at 246.38 161.7781 90)
 			(effects
 				(font
@@ -10140,7 +9735,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 242.57 166.0652 0)
 			(effects
 				(font
@@ -10158,7 +9753,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "GRM1555C1H101JA01D"
 			(at 246.38 165.1 0)
 			(effects
 				(font
@@ -10207,7 +9802,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 255.5748 83.82 0)
 			(effects
 				(font
@@ -10225,7 +9820,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
+		(property "Description" "GRM155R71C104KA88D"
 			(at 256.54 87.63 0)
 			(effects
 				(font
@@ -10267,7 +9862,7 @@
 				)
 			)
 		)
-		(property "Value" "L"
+		(property "Value" "2.5n"
 			(at 226.06 162.56 90)
 			(effects
 				(font
@@ -10275,7 +9870,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_0603_1608Metric"
+		(property "Footprint" "Inductor_SMD:L_0402_1005Metric"
 			(at 226.06 165.1 0)
 			(effects
 				(font
@@ -10293,7 +9888,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Inductor"
+		(property "Description" "LQW15AN2N5C00D"
 			(at 226.06 165.1 0)
 			(effects
 				(font
@@ -10451,7 +10046,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 58.42 68.58 0)
+		(at 72.39 55.88 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10460,7 +10055,7 @@
 		(fields_autoplaced yes)
 		(uuid "953eefd3-4972-4d5f-ad8c-dd44eee3398f")
 		(property "Reference" "#PWR02"
-			(at 58.42 74.93 0)
+			(at 72.39 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10469,7 +10064,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 58.42 73.0234 0)
+			(at 72.39 60.3234 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10477,7 +10072,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 58.42 68.58 0)
+			(at 72.39 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10486,7 +10081,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 58.42 68.58 0)
+			(at 72.39 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10495,7 +10090,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 58.42 68.58 0)
+			(at 72.39 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10517,7 +10112,7 @@
 	)
 	(symbol
 		(lib_id "CR2032:CR2032")
-		(at 58.42 63.5 90)
+		(at 72.39 50.8 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10525,7 +10120,7 @@
 		(dnp no)
 		(uuid "9759caa0-b188-4556-bd0e-ccc1f38fcc28")
 		(property "Reference" "U5"
-			(at 52.578 64.008 90)
+			(at 66.548 51.308 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10534,7 +10129,7 @@
 			)
 		)
 		(property "Value" "CR2032"
-			(at 60.452 66.548 90)
+			(at 74.422 53.848 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10543,7 +10138,7 @@
 			)
 		)
 		(property "Footprint" "Battery:BatteryHolder_Keystone_3002_1x2032"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10552,7 +10147,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10561,7 +10156,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10570,7 +10165,7 @@
 			)
 		)
 		(property "MF" "FDK America,"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10580,7 +10175,7 @@
 			)
 		)
 		(property "Description_1" "Button cell battery [Panasonic Automotive & Industrial Systems] CR2032 Button cell battery"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10590,7 +10185,7 @@
 			)
 		)
 		(property "Package" "FDK"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10600,7 +10195,7 @@
 			)
 		)
 		(property "Price" "None"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10610,7 +10205,7 @@
 			)
 		)
 		(property "SnapEDA_Link" "https://www.snapeda.com/parts/CR2032/FDK/view-part/?ref=snap"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10620,7 +10215,7 @@
 			)
 		)
 		(property "MP" "CR2032"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10630,7 +10225,7 @@
 			)
 		)
 		(property "Availability" "In Stock"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10640,7 +10235,7 @@
 			)
 		)
 		(property "Check_prices" "https://www.snapeda.com/parts/CR2032/FDK/view-part/?ref=eda"
-			(at 58.42 63.5 0)
+			(at 72.39 50.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10692,7 +10287,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 268.2748 101.6 0)
 			(effects
 				(font
@@ -10710,7 +10305,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Unpolarized capacitor"
+		(property "Description" "GRM1555C1H101JA01D"
 			(at 269.24 105.41 0)
 			(effects
 				(font
@@ -10826,7 +10421,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 73.66 202.2348 0)
 			(effects
 				(font
@@ -10936,7 +10531,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 280.67 184.15 0)
+		(at 250.19 186.69 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10945,7 +10540,7 @@
 		(fields_autoplaced yes)
 		(uuid "a47112e2-9544-4de7-85ab-da2b608e1182")
 		(property "Reference" "#PWR013"
-			(at 280.67 190.5 0)
+			(at 250.19 193.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10954,7 +10549,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 280.67 188.5934 0)
+			(at 250.19 191.1334 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10962,7 +10557,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 280.67 184.15 0)
+			(at 250.19 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10971,7 +10566,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 280.67 184.15 0)
+			(at 250.19 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10980,7 +10575,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 280.67 184.15 0)
+			(at 250.19 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11092,7 +10687,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 264.16 166.0652 0)
 			(effects
 				(font
@@ -11359,7 +10954,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 66.04 188.2648 0)
 			(effects
 				(font
@@ -11954,7 +11549,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "0"
+		(property "Value" "1.2p"
 			(at 218.821 170.6122 0)
 			(effects
 				(font
@@ -11963,7 +11558,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 214.9348 165.1 0)
 			(effects
 				(font
@@ -11981,7 +11576,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "GRM1555C1H1R2BA01D"
 			(at 215.9 168.91 0)
 			(effects
 				(font
@@ -12089,7 +11684,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "T543X336K050ATW040"
+		(property "Value" "220u"
 			(at 204.47 217.17 90)
 			(effects
 				(font
@@ -12117,7 +11712,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "T491D227K010AT"
 			(at 203.2 214.63 0)
 			(effects
 				(font
@@ -12269,10 +11864,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "c70be84d-8d70-4c49-8f46-cbe0af7c48eb")
 		(property "Reference" "C17"
-			(at 237.871 168.0753 0)
+			(at 237.49 168.656 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12280,7 +11874,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "0"
+		(property "Value" "1.2p"
 			(at 237.871 170.6122 0)
 			(effects
 				(font
@@ -12289,7 +11883,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 235.9152 172.72 0)
 			(effects
 				(font
@@ -12307,7 +11901,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "GRM1555C1H1R2BA01D"
 			(at 234.95 168.91 0)
 			(effects
 				(font
@@ -12421,7 +12015,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 264.16 94.742 90)
 			(effects
 				(font
@@ -12439,7 +12033,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "CRCW04020000Z0ED"
 			(at 264.16 96.52 0)
 			(effects
 				(font
@@ -12481,7 +12075,7 @@
 				)
 			)
 		)
-		(property "Value" "0"
+		(property "Value" "0.5p"
 			(at 226.06 151.6181 90)
 			(effects
 				(font
@@ -12489,7 +12083,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 222.25 155.9052 0)
 			(effects
 				(font
@@ -12507,7 +12101,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "GRM1555C1HR50WA01D"
 			(at 226.06 154.94 0)
 			(effects
 				(font
@@ -12691,7 +12285,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 257.5052 172.72 0)
 			(effects
 				(font
@@ -12908,7 +12502,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Four pin crystal, GND on pins 2 and 4"
+		(property "Description" "NT2016SA 52MHz END5225A"
 			(at 196.85 127 0)
 			(effects
 				(font
@@ -12933,6 +12527,73 @@
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "Y3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 200.66 106.68 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f4b18ab4-dd57-4006-9cb3-fd6928e9d588")
+		(property "Reference" "R4"
+			(at 202.438 104.394 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "R"
+			(at 201.93 102.362 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0201_0603Metric"
+			(at 200.66 104.902 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 200.66 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "CRCW02011K00JNED"
+			(at 200.66 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "ca8b65c5-c1b5-4d7d-b8a6-7200d67e9c2e")
+		)
+		(pin "1"
+			(uuid "d6d193d8-2be7-49a2-b9e5-fd93fcd9ce6e")
+		)
+		(instances
+			(project "BLE MIOTY MODULE_v2"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "R4")
 					(unit 1)
 				)
 			)
@@ -13223,7 +12884,7 @@
 				)
 			)
 		)
-		(property "Value" "L"
+		(property "Value" "3n"
 			(at 207.01 162.56 90)
 			(effects
 				(font
@@ -13231,7 +12892,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_0603_1608Metric"
+		(property "Footprint" "Inductor_SMD:L_0402_1005Metric"
 			(at 207.01 165.1 0)
 			(effects
 				(font
@@ -13249,7 +12910,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Inductor"
+		(property "Description" "LQW15AN3N0B80D"
 			(at 207.01 165.1 0)
 			(effects
 				(font
