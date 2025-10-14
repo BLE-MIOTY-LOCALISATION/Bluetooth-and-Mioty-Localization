@@ -10929,17 +10929,6 @@
 			)
 		)
 	)
-	(gr_circle
-		(center 130.3 79.2)
-		(end 150.05 79.2)
-		(stroke
-			(width 0.2)
-			(type solid)
-		)
-		(fill no)
-		(layer "F.Cu")
-		(uuid "ea9bb6c5-2b8c-4c7e-a08d-5b23cd6559cf")
-	)
 	(gr_poly
 		(pts
 			(xy 125.889997 65.009995) (xy 130.529999 65.009991) (xy 130.530002 67.069997) (xy 125.889997 67.069995)
