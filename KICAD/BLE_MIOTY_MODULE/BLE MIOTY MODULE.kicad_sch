@@ -10792,7 +10792,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor"
+		(property "Description" "CRCW0402100KFKED"
 			(at 125.73 156.21 0)
 			(effects
 				(font
@@ -12019,7 +12019,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "d293680f-c699-480c-8a34-ac922051c9ec")
-		(property "Reference" "R3"
+		(property "Reference" "Zero"
 			(at 265.938 90.424 90)
 			(effects
 				(font
@@ -12071,7 +12071,7 @@
 		(instances
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "R3")
+					(reference "Zero")
 					(unit 1)
 				)
 			)
