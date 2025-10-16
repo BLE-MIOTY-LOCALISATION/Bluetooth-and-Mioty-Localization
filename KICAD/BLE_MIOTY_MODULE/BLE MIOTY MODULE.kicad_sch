@@ -4650,8 +4650,8 @@
 		(uuid 175a77b2-9f6e-43ce-bc69-cca083e2e1e4)
 	)
 	(rectangle
-		(start 124.46 118.11)
-		(end 165.1 137.16)
+		(start 187.96 44.45)
+		(end 228.6 63.5)
 		(stroke
 			(width 0)
 			(type default)
@@ -4662,7 +4662,7 @@
 		(uuid 22bf86ee-e05b-42e2-9610-b3466f3301b2)
 	)
 	(rectangle
-		(start 115.57 140.97)
+		(start 115.57 106.68)
 		(end 179.07 229.87)
 		(stroke
 			(width 0)
@@ -4687,7 +4687,7 @@
 	)
 	(rectangle
 		(start 57.15 34.29)
-		(end 87.63 62.23)
+		(end 101.6 80.01)
 		(stroke
 			(width 0)
 			(type default)
@@ -4789,7 +4789,7 @@
 	)
 	(text "Power Supply"
 		(exclude_from_sim no)
-		(at 71.882 64.262 0)
+		(at 92.71 77.724 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4809,7 +4809,7 @@
 	)
 	(text "Accelerometer\n"
 		(exclude_from_sim no)
-		(at 143.51 107.95 0)
+		(at 212.09 40.64 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4829,7 +4829,7 @@
 	)
 	(text "LED\n"
 		(exclude_from_sim no)
-		(at 146.05 138.938 0)
+		(at 209.55 65.278 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4862,6 +4862,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "06b0077a-ba93-4c98-ba99-e681a2e68f51")
+	)
+	(junction
+		(at 83.82 43.18)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0999ec89-688b-415d-8e92-5289b8cabccf")
 	)
 	(junction
 		(at 142.24 143.51)
@@ -4912,10 +4918,22 @@
 		(uuid "48d7372e-66c4-4c61-91a0-5f0d47dfc1fa")
 	)
 	(junction
+		(at 71.12 57.15)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4b93657b-b390-4328-9ec6-d6073c2255ef")
+	)
+	(junction
 		(at 167.64 81.28)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "4ff59664-8097-461e-a9ae-49959e6f996c")
+	)
+	(junction
+		(at 149.86 124.46)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "59cb8206-1b38-42d9-9ae1-4356070edba3")
 	)
 	(junction
 		(at 83.82 219.71)
@@ -4934,6 +4952,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7080b0ac-8048-489b-b70b-380b24360329")
+	)
+	(junction
+		(at 137.16 124.46)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7352717a-5dcd-4d6b-8d62-d8f163f2b559")
 	)
 	(junction
 		(at 156.21 31.75)
@@ -5020,12 +5044,6 @@
 		(uuid "b6537f28-a8cf-4e5e-a96d-fa8be4fb9c2c")
 	)
 	(junction
-		(at 72.39 45.72)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "b81ab751-efce-4be6-b5ff-3f78a6ddc5a4")
-	)
-	(junction
 		(at 148.59 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5060,6 +5078,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "f4e7ed05-752a-4f0e-a2cf-0ac7845acb3d")
+	)
+	(junction
+		(at 143.51 124.46)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f51f2481-1b66-410d-8505-5b43154f54c2")
 	)
 	(no_connect
 		(at 165.1 176.53)
@@ -5163,6 +5187,16 @@
 	)
 	(wire
 		(pts
+			(xy 71.12 67.31) (xy 71.12 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08d4d279-7f85-481a-9199-4af8fab608cc")
+	)
+	(wire
+		(pts
 			(xy 248.92 87.63) (xy 248.92 90.17)
 		)
 		(stroke
@@ -5203,16 +5237,6 @@
 	)
 	(wire
 		(pts
-			(xy 72.39 41.91) (xy 72.39 45.72)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0d931250-00dc-40a8-99ad-8863b2135fd0")
-	)
-	(wire
-		(pts
 			(xy 194.31 102.87) (xy 196.85 102.87)
 		)
 		(stroke
@@ -5223,17 +5247,17 @@
 	)
 	(wire
 		(pts
-			(xy 134.62 143.51) (xy 142.24 143.51)
+			(xy 132.08 124.46) (xy 132.08 143.51)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "0e405d78-d93f-4606-b4d0-63e12062c0d0")
+		(uuid "0eca0b8e-3040-4f91-8fdd-5dc38f1655b8")
 	)
 	(wire
 		(pts
-			(xy 128.27 125.73) (xy 133.35 125.73)
+			(xy 191.77 52.07) (xy 196.85 52.07)
 		)
 		(stroke
 			(width 0)
@@ -5273,13 +5297,23 @@
 	)
 	(wire
 		(pts
-			(xy 72.39 45.72) (xy 74.93 45.72)
+			(xy 71.12 57.15) (xy 73.66 57.15)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "17938627-2753-464f-a172-77ac3d0116e7")
+	)
+	(wire
+		(pts
+			(xy 71.12 43.18) (xy 71.12 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1d9ea462-10ea-4584-922e-353b85474a9d")
 	)
 	(wire
 		(pts
@@ -5323,6 +5357,16 @@
 	)
 	(wire
 		(pts
+			(xy 93.98 60.96) (xy 93.98 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "26528176-3b56-4583-a42a-b193bb4438d5")
+	)
+	(wire
+		(pts
 			(xy 215.9 154.94) (xy 215.9 165.1)
 		)
 		(stroke
@@ -5340,6 +5384,16 @@
 			(type default)
 		)
 		(uuid "26a00454-4c63-4bf5-99ab-bb3d014c094d")
+	)
+	(wire
+		(pts
+			(xy 71.12 54.61) (xy 71.12 57.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2ad14581-f687-455c-9b73-b62630d8d2d7")
 	)
 	(wire
 		(pts
@@ -5403,6 +5457,16 @@
 	)
 	(wire
 		(pts
+			(xy 83.82 60.96) (xy 83.82 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3d3534e8-1835-45c6-b03c-4343e3611070")
+	)
+	(wire
+		(pts
 			(xy 203.2 123.19) (xy 201.93 123.19)
 		)
 		(stroke
@@ -5410,6 +5474,26 @@
 			(type default)
 		)
 		(uuid "3dc4345b-92a0-4895-8d70-4687bac6715f")
+	)
+	(wire
+		(pts
+			(xy 156.21 133.35) (xy 156.21 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3e7a82df-1b9a-4d9d-8a10-bb9215dc82ad")
+	)
+	(wire
+		(pts
+			(xy 132.08 143.51) (xy 142.24 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3f078431-ff53-467d-94db-891e2d8745c9")
 	)
 	(wire
 		(pts
@@ -5460,6 +5544,16 @@
 			(type default)
 		)
 		(uuid "46f88d60-2554-4f6c-958d-c944c9d244c1")
+	)
+	(wire
+		(pts
+			(xy 137.16 124.46) (xy 143.51 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "49047ae8-61da-4bdb-b379-c0c9172c1738")
 	)
 	(wire
 		(pts
@@ -5530,6 +5624,16 @@
 			(type default)
 		)
 		(uuid "5af79725-8415-463b-a93e-243ff2f1176e")
+	)
+	(wire
+		(pts
+			(xy 143.51 124.46) (xy 149.86 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5b1045e6-4c56-417d-afc5-f7d9f5e4ab77")
 	)
 	(wire
 		(pts
@@ -5673,13 +5777,23 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 91.44) (xy 76.2 90.17)
+			(xy 137.16 124.46) (xy 137.16 125.73)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "73c8a1d5-bd63-4ffc-8a88-5ae81047a05c")
+		(uuid "73873f5a-b830-46a8-b292-b8cfbe325580")
+	)
+	(wire
+		(pts
+			(xy 132.08 124.46) (xy 137.16 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "73d2168d-39d7-4f1c-8323-9b213c5cf7a1")
 	)
 	(wire
 		(pts
@@ -5700,6 +5814,16 @@
 			(type default)
 		)
 		(uuid "7786e976-8724-4caf-b274-202c39316b7c")
+	)
+	(wire
+		(pts
+			(xy 76.2 88.9) (xy 76.2 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "793e6706-64a2-4afe-a966-4a0bd91fda79")
 	)
 	(wire
 		(pts
@@ -5730,6 +5854,16 @@
 			(type default)
 		)
 		(uuid "7f5ca491-8259-45a9-8f6c-3dfdb06090ae")
+	)
+	(wire
+		(pts
+			(xy 143.51 133.35) (xy 143.51 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7fa64fd9-84a0-44e9-9c36-541ee7396e22")
 	)
 	(wire
 		(pts
@@ -5843,7 +5977,7 @@
 	)
 	(wire
 		(pts
-			(xy 128.27 125.73) (xy 128.27 129.54)
+			(xy 191.77 52.07) (xy 191.77 55.88)
 		)
 		(stroke
 			(width 0)
@@ -5860,6 +5994,16 @@
 			(type default)
 		)
 		(uuid "985a06bd-30a6-4753-8148-3793700189b4")
+	)
+	(wire
+		(pts
+			(xy 83.82 43.18) (xy 71.12 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "99e95d06-95f6-4002-abde-1eeb4e30fca9")
 	)
 	(wire
 		(pts
@@ -5933,6 +6077,16 @@
 	)
 	(wire
 		(pts
+			(xy 76.2 97.79) (xy 76.2 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ae2ac8ad-aab1-44e6-b4fc-63fd63269fb3")
+	)
+	(wire
+		(pts
 			(xy 207.01 127) (xy 196.85 127)
 		)
 		(stroke
@@ -5940,6 +6094,26 @@
 			(type default)
 		)
 		(uuid "ae2e4188-c597-4bf6-a0dc-61d75ef08046")
+	)
+	(wire
+		(pts
+			(xy 137.16 133.35) (xy 137.16 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b24b2135-f2c0-4564-bca6-c0685829c28e")
+	)
+	(wire
+		(pts
+			(xy 149.86 124.46) (xy 156.21 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b38993ea-5ee0-458b-bec0-d18305396cbf")
 	)
 	(wire
 		(pts
@@ -5960,6 +6134,16 @@
 			(type default)
 		)
 		(uuid "b6536fa4-5c83-4ea0-909e-490892ff01a8")
+	)
+	(wire
+		(pts
+			(xy 83.82 53.34) (xy 83.82 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b80a91e9-0abe-4e42-b448-09e92c9e943d")
 	)
 	(wire
 		(pts
@@ -6023,6 +6207,16 @@
 	)
 	(wire
 		(pts
+			(xy 93.98 43.18) (xy 83.82 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c30bb866-f968-4072-8574-82e690fb8afa")
+	)
+	(wire
+		(pts
 			(xy 148.59 45.72) (xy 148.59 31.75)
 		)
 		(stroke
@@ -6073,6 +6267,16 @@
 	)
 	(wire
 		(pts
+			(xy 149.86 124.46) (xy 149.86 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cf97b3dc-6635-4003-95b0-36ad4ff2c549")
+	)
+	(wire
+		(pts
 			(xy 149.86 143.51) (xy 149.86 146.05)
 		)
 		(stroke
@@ -6103,7 +6307,7 @@
 	)
 	(wire
 		(pts
-			(xy 149.86 125.73) (xy 152.4 125.73)
+			(xy 213.36 52.07) (xy 215.9 52.07)
 		)
 		(stroke
 			(width 0)
@@ -6143,7 +6347,7 @@
 	)
 	(wire
 		(pts
-			(xy 69.85 45.72) (xy 72.39 45.72)
+			(xy 68.58 57.15) (xy 71.12 57.15)
 		)
 		(stroke
 			(width 0)
@@ -6160,6 +6364,26 @@
 			(type default)
 		)
 		(uuid "de4844bf-bb52-43aa-bfff-f54ab1b468c1")
+	)
+	(wire
+		(pts
+			(xy 93.98 53.34) (xy 93.98 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "de7d51a0-067b-4ded-a321-138119578f53")
+	)
+	(wire
+		(pts
+			(xy 149.86 133.35) (xy 149.86 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e0fbe8b0-16c6-4d20-97ea-654706cdc9f0")
 	)
 	(wire
 		(pts
@@ -6193,7 +6417,7 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 125.73) (xy 142.24 125.73)
+			(xy 204.47 52.07) (xy 205.74 52.07)
 		)
 		(stroke
 			(width 0)
@@ -6213,7 +6437,7 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 146.05) (xy 80.01 146.05)
+			(xy 83.82 146.05) (xy 81.28 146.05)
 		)
 		(stroke
 			(width 0)
@@ -6263,6 +6487,16 @@
 	)
 	(wire
 		(pts
+			(xy 76.2 88.9) (xy 81.28 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f795a4d9-fdf9-41dd-ac3a-c64e4116c80e")
+	)
+	(wire
+		(pts
 			(xy 163.83 76.2) (xy 167.64 76.2)
 		)
 		(stroke
@@ -6293,6 +6527,16 @@
 	)
 	(wire
 		(pts
+			(xy 143.51 124.46) (xy 143.51 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fdbf7a4e-52db-4004-9a39-13b43ba5bdd3")
+	)
+	(wire
+		(pts
 			(xy 66.04 171.45) (xy 72.39 171.45)
 		)
 		(stroke
@@ -6313,13 +6557,13 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 90.17) (xy 81.28 90.17)
+			(xy 156.21 124.46) (xy 156.21 125.73)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "fe9f1b71-63dd-48dd-9548-9a111b4e5535")
+		(uuid "ff0039e2-7c89-4203-8337-2bc472b0ad24")
 	)
 	(wire
 		(pts
@@ -6343,7 +6587,7 @@
 	)
 	(global_label "VCC, 3.3V"
 		(shape input)
-		(at 72.39 41.91 180)
+		(at 71.12 43.18 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6353,7 +6597,7 @@
 		)
 		(uuid "0297642a-7724-44ff-b0fd-b91bcb5fcc64")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 60.0914 41.91 0)
+			(at 58.8214 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6585,7 +6829,7 @@
 	)
 	(global_label "LED"
 		(shape input)
-		(at 152.4 125.73 0)
+		(at 215.9 52.07 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6595,7 +6839,7 @@
 		)
 		(uuid "2ae3f324-7394-4f7d-8ba8-4a83e1dceb3b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 158.8323 125.73 0)
+			(at 222.3323 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6783,7 +7027,7 @@
 	)
 	(global_label "VCC, 3.3V"
 		(shape input)
-		(at 81.28 90.17 0)
+		(at 81.28 88.9 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6793,7 +7037,7 @@
 		)
 		(uuid "57c6e659-e0ed-4cd3-a888-ac3cc89fb9c3")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 93.5786 90.17 0)
+			(at 93.5786 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7135,7 +7379,7 @@
 	)
 	(global_label "VCC, 3.3V"
 		(shape input)
-		(at 134.62 143.51 180)
+		(at 132.08 143.51 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7145,7 +7389,7 @@
 		)
 		(uuid "b0b294c7-6009-4989-9f37-2d1fdb7b10ce")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 122.3214 143.51 0)
+			(at 119.7814 143.51 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7223,7 +7467,7 @@
 	)
 	(global_label "SwDCLK"
 		(shape input)
-		(at 80.01 146.05 180)
+		(at 81.28 146.05 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7233,7 +7477,7 @@
 		)
 		(uuid "c847a50c-78cb-4d52-b1cc-9f516e9fb784")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 69.6467 146.05 0)
+			(at 70.9167 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7641,6 +7885,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 143.51 135.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "05a2cdb9-de1f-4330-b0e4-23ccd980f584")
+		(property "Reference" "#PWR035"
+			(at 143.51 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 143.51 140.3334 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 143.51 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 143.51 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 143.51 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a87ecab6-6278-40a5-84a3-460f71653547")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "#PWR035")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 196.85 168.91 180)
 		(unit 1)
@@ -7705,6 +8015,72 @@
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "C11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 83.82 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "09f046aa-05b4-42da-b20a-a7072ef4489b")
+		(property "Reference" "#PWR07"
+			(at 83.82 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 83.82 70.4834 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 83.82 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 83.82 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 83.82 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bd372018-d50e-4bb0-a19e-5034caa7f4e0")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "#PWR07")
 					(unit 1)
 				)
 			)
@@ -7905,6 +8281,73 @@
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "C23")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 83.82 57.15 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "16d083aa-fea1-4270-83e9-7aab934d4e8c")
+		(property "Reference" "C8"
+			(at 86.106 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1u"
+			(at 87.376 61.976 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 84.7852 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 83.82 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 83.82 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2a0b3389-8b41-42de-9bd0-39dc2111202c")
+		)
+		(pin "2"
+			(uuid "5d7fe6ec-6938-4cdb-8576-4a98a3cc3468")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "C8")
 					(unit 1)
 				)
 			)
@@ -8183,6 +8626,73 @@
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 149.86 129.54 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1c922496-b7f3-45f2-8b5c-8acff5b6c886")
+		(property "Reference" "C9"
+			(at 151.892 131.572 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0.1u"
+			(at 152.908 133.604 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 150.8252 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 149.86 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 149.86 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0ca66524-9ad3-4a8b-bd46-e9a724f34eb1")
+		)
+		(pin "2"
+			(uuid "5a3300ee-e96d-46eb-9618-c8d7eff3e331")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "C9")
 					(unit 1)
 				)
 			)
@@ -8719,6 +9229,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 143.51 129.54 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3a6a01a8-4175-4550-a747-f7a15fe999fc")
+		(property "Reference" "C16"
+			(at 145.796 131.318 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0.1u"
+			(at 146.558 133.604 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 144.4752 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 143.51 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 143.51 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "85c4db21-5fb5-4d9d-9e45-77e4afc3530c")
+		)
+		(pin "2"
+			(uuid "d0f75b33-816f-45f5-94c7-9e6b910d4128")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "C16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:Crystal")
 		(at 83.82 210.82 90)
 		(unit 1)
@@ -8855,33 +9432,32 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:LED")
-		(at 137.16 125.73 0)
+		(lib_id "Device:R")
+		(at 71.12 50.8 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "44308a50-77bc-4cca-9f20-abb67d918146")
-		(property "Reference" "D1"
-			(at 135.5725 120.7602 0)
+		(uuid "4229e3c8-41ac-40f7-b9b0-7790bc42dd55")
+		(property "Reference" "RBAT"
+			(at 67.056 48.768 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "LED"
-			(at 135.5725 123.2971 0)
+		(property "Value" "20"
+			(at 74.168 52.578 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
-			(at 137.16 125.73 0)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 69.342 50.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8890,7 +9466,75 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 137.16 125.73 0)
+			(at 71.12 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 71.12 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "4c62e39f-c54b-4fb1-b70d-f9164645066d")
+		)
+		(pin "1"
+			(uuid "5d97195f-c7fc-4cce-8e03-7376e7a24d44")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "RBAT")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 200.66 52.07 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "44308a50-77bc-4cca-9f20-abb67d918146")
+		(property "Reference" "D1"
+			(at 199.0725 47.1002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LED"
+			(at 199.0725 49.6371 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+			(at 200.66 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 200.66 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8899,7 +9543,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 137.16 125.73 0)
+			(at 200.66 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8924,7 +9568,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 76.2 95.25 0)
+		(at 76.2 93.98 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8932,7 +9576,7 @@
 		(dnp no)
 		(uuid "55ed75d2-3496-4516-b98d-db43e5e921da")
 		(property "Reference" "10K1"
-			(at 72.898 94.742 0)
+			(at 72.898 93.472 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8940,7 +9584,7 @@
 			)
 		)
 		(property "Value" "R3"
-			(at 73.914 92.71 0)
+			(at 73.914 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8948,7 +9592,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 74.422 95.25 90)
+			(at 74.422 93.98 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8957,7 +9601,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 76.2 95.25 0)
+			(at 76.2 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8966,7 +9610,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 76.2 95.25 0)
+			(at 76.2 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9127,6 +9771,72 @@
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "P1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 156.21 135.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6841eb0a-10e2-4625-be18-042f17b92940")
+		(property "Reference" "#PWR011"
+			(at 156.21 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 156.21 140.3334 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 156.21 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 156.21 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 156.21 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1d123e7e-9a07-41c7-b04f-5331bdef6656")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "#PWR011")
 					(unit 1)
 				)
 			)
@@ -9522,6 +10232,73 @@
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "U4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 137.16 129.54 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7d1a35ee-78fa-4fc4-bc92-536dd8d79e98")
+		(property "Reference" "C14"
+			(at 139.192 131.572 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0.1u"
+			(at 140.462 133.858 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 138.1252 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 137.16 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 137.16 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ca192e46-294e-4c0d-ba53-470e2c3b84ee")
+		)
+		(pin "2"
+			(uuid "74930bea-cd5c-41e5-88be-40746751df2a")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "C14")
 					(unit 1)
 				)
 			)
@@ -9999,6 +10776,139 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 93.98 57.15 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "88651a07-ba62-41cc-b50e-5cba3f238746")
+		(property "Reference" "C7"
+			(at 96.52 59.436 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1u"
+			(at 97.282 61.722 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 94.9452 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 93.98 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 93.98 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b2288e4a-f45a-4418-8228-63b27055fd37")
+		)
+		(pin "2"
+			(uuid "25b9f251-c722-4e5f-a56a-4e2f4155b3b7")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "C7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 93.98 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8dec7dbd-c481-4c72-a4a7-a6fd091fac09")
+		(property "Reference" "#PWR08"
+			(at 93.98 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 93.98 70.4834 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 93.98 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 93.98 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 93.98 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f6e23036-81ec-4e8a-8142-55372f5a5e01")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "#PWR08")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 256.54 172.72 0)
 		(unit 1)
@@ -10066,7 +10976,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 72.39 55.88 0)
+		(at 71.12 66.04 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10075,7 +10985,7 @@
 		(fields_autoplaced yes)
 		(uuid "953eefd3-4972-4d5f-ad8c-dd44eee3398f")
 		(property "Reference" "#PWR02"
-			(at 72.39 62.23 0)
+			(at 71.12 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10084,7 +10994,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 72.39 60.3234 0)
+			(at 71.12 70.4834 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10092,7 +11002,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 72.39 55.88 0)
+			(at 71.12 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10101,7 +11011,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 72.39 55.88 0)
+			(at 71.12 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10110,7 +11020,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 72.39 55.88 0)
+			(at 71.12 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10131,34 +11041,34 @@
 		)
 	)
 	(symbol
-		(lib_id "CR2032:CR2032")
-		(at 72.39 50.8 90)
+		(lib_id "power:GND")
+		(at 149.86 135.89 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9759caa0-b188-4556-bd0e-ccc1f38fcc28")
-		(property "Reference" "U5"
-			(at 66.548 51.308 90)
+		(fields_autoplaced yes)
+		(uuid "95a8dc79-ceb3-4c92-a6a9-216464f920a9")
+		(property "Reference" "#PWR010"
+			(at 149.86 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(hide yes)
 			)
 		)
-		(property "Value" "CR2032"
-			(at 74.422 53.848 90)
+		(property "Value" "GND"
+			(at 149.86 140.3334 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
 			)
 		)
-		(property "Footprint" "Battery:BatteryHolder_Keystone_3002_1x2032"
-			(at 72.39 50.8 0)
+		(property "Footprint" ""
+			(at 149.86 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10167,7 +11077,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 72.39 50.8 0)
+			(at 149.86 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10176,7 +11086,73 @@
 			)
 		)
 		(property "Description" ""
-			(at 72.39 50.8 0)
+			(at 149.86 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2950b521-7ee4-4cbc-a35d-ce9e3533180e")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "#PWR010")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "CR2032:CR2032")
+		(at 71.12 62.23 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "9759caa0-b188-4556-bd0e-ccc1f38fcc28")
+		(property "Reference" "U5"
+			(at 65.278 62.738 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "CR2032"
+			(at 73.152 65.278 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Battery:BatteryHolder_Keystone_3002_1x2032"
+			(at 71.12 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 71.12 62.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10185,7 +11161,7 @@
 			)
 		)
 		(property "MF" "FDK America,"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10195,7 +11171,7 @@
 			)
 		)
 		(property "Description_1" "Button cell battery [Panasonic Automotive & Industrial Systems] CR2032 Button cell battery"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10205,7 +11181,7 @@
 			)
 		)
 		(property "Package" "FDK"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10215,7 +11191,7 @@
 			)
 		)
 		(property "Price" "None"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10225,7 +11201,7 @@
 			)
 		)
 		(property "SnapEDA_Link" "https://www.snapeda.com/parts/CR2032/FDK/view-part/?ref=snap"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10235,7 +11211,7 @@
 			)
 		)
 		(property "MP" "CR2032"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10245,7 +11221,7 @@
 			)
 		)
 		(property "Availability" "In Stock"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10255,7 +11231,7 @@
 			)
 		)
 		(property "Check_prices" "https://www.snapeda.com/parts/CR2032/FDK/view-part/?ref=eda"
-			(at 72.39 50.8 0)
+			(at 71.12 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10907,7 +11883,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 65.0748 140.97 0)
 			(effects
 				(font
@@ -11220,7 +12196,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 128.27 129.54 0)
+		(at 191.77 55.88 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11229,7 +12205,7 @@
 		(fields_autoplaced yes)
 		(uuid "b5acdfdc-1c51-4d12-adc1-68c113df14e6")
 		(property "Reference" "#PWR06"
-			(at 128.27 135.89 0)
+			(at 191.77 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11238,7 +12214,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 128.27 133.9834 0)
+			(at 191.77 60.3234 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11246,7 +12222,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 128.27 129.54 0)
+			(at 191.77 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11255,7 +12231,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 128.27 129.54 0)
+			(at 191.77 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11264,7 +12240,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 128.27 129.54 0)
+			(at 191.77 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11286,7 +12262,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 146.05 125.73 90)
+		(at 209.55 52.07 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11295,7 +12271,7 @@
 		(fields_autoplaced yes)
 		(uuid "b6b588a0-8a36-46b2-a1cd-dcd746cf8d97")
 		(property "Reference" "R2"
-			(at 146.05 119.38 90)
+			(at 209.55 45.72 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11303,7 +12279,7 @@
 			)
 		)
 		(property "Value" "2000R"
-			(at 146.05 121.92 90)
+			(at 209.55 48.26 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11311,7 +12287,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 146.05 127.508 90)
+			(at 209.55 53.848 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11320,7 +12296,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 146.05 125.73 0)
+			(at 209.55 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11329,7 +12305,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 146.05 125.73 0)
+			(at 209.55 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12212,6 +13188,73 @@
 	)
 	(symbol
 		(lib_id "Device:C")
+		(at 156.21 129.54 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "db8058b6-3067-40be-b83d-94fba39dae38")
+		(property "Reference" "C12"
+			(at 158.496 131.318 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0.1u"
+			(at 159.004 133.604 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 157.1752 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 156.21 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 156.21 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e55543b6-a52f-477e-80f7-a7ffdf5e7ee0")
+		)
+		(pin "2"
+			(uuid "c6c77a49-9af2-4888-b210-2f5fd3af97f0")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "C12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
 		(at 166.37 35.56 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -12680,6 +13723,72 @@
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "#PWR012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 137.16 135.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f88484f2-999a-4445-8a27-7de3d4839e25")
+		(property "Reference" "#PWR025"
+			(at 137.16 142.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 137.16 140.3334 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 137.16 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 137.16 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 137.16 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b3d89ded-894a-4d62-9b65-afa06c65d870")
+		)
+		(instances
+			(project "BLE MIOTY MODULE"
+				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
+					(reference "#PWR025")
 					(unit 1)
 				)
 			)
