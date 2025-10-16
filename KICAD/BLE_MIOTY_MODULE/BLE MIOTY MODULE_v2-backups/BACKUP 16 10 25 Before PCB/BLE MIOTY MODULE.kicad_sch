@@ -9258,7 +9258,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "4229e3c8-41ac-40f7-b9b0-7790bc42dd55")
-		(property "Reference" "RBATT1"
+		(property "Reference" "RBAT"
 			(at 67.056 48.768 0)
 			(effects
 				(font
@@ -9310,7 +9310,7 @@
 		(instances
 			(project "BLE MIOTY MODULE"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "RBATT1")
+					(reference "RBAT")
 					(unit 1)
 				)
 			)
@@ -12490,7 +12490,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "d293680f-c699-480c-8a34-ac922051c9ec")
-		(property "Reference" "RZERO1"
+		(property "Reference" "Zero"
 			(at 265.938 90.424 90)
 			(effects
 				(font
@@ -12498,7 +12498,7 @@
 				)
 			)
 		)
-		(property "Value" "0"
+		(property "Value" "R"
 			(at 265.43 88.392 90)
 			(effects
 				(font
@@ -12542,7 +12542,7 @@
 		(instances
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "RZERO1")
+					(reference "Zero")
 					(unit 1)
 				)
 			)
