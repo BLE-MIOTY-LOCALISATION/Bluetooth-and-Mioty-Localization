@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name "RP-Pico Libraries")(type "KiCad")(uri "${KIPRJMOD}/RP-Pico Libraries")(options "")(descr ""))
+  (lib (name "MCU_RaspberryPi_and_Boards")(type "KiCad")(uri "${KIPRJMOD}/RP-Pico Libraries/MCU_RaspberryPi_and_Boards.pretty")(options "")(descr ""))
+  (lib (name "Antenna")(type "KiCad")(uri "C:/Users/robert/Documents/TU Ilmenau/PCB/FlexiCellTag/FlexiCellTag/Antenna.pretty")(options "")(descr ""))
+)
