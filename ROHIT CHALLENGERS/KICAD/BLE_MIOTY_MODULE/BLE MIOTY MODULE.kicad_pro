@@ -26,9 +26,9 @@
         },
         "fab_line_width": 0.1,
         "fab_text_italic": false,
-        "fab_text_size_h": 1.0,
-        "fab_text_size_v": 1.0,
-        "fab_text_thickness": 0.15,
+        "fab_text_size_h": 0.5,
+        "fab_text_size_v": 0.5,
+        "fab_text_thickness": 0.0625,
         "fab_text_upright": false,
         "other_line_width": 0.15,
         "other_text_italic": false,
@@ -37,15 +37,15 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 5.1,
-          "width": 5.1
+          "drill": 0.85,
+          "height": 2.0,
+          "width": 1.6
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
-        "silk_text_size_h": 1.0,
-        "silk_text_size_v": 1.0,
-        "silk_text_thickness": 0.15,
+        "silk_text_size_h": 0.1,
+        "silk_text_size_v": 0.1,
+        "silk_text_thickness": 0.005,
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
@@ -194,8 +194,7 @@
       ],
       "track_widths": [
         0.0,
-        0.13,
-        0.25,
+        0.5,
         1.0
       ],
       "tuning_pattern_settings": {
@@ -510,7 +509,7 @@
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "",
+      "netlist": "./",
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
