@@ -5292,12 +5292,6 @@
 		(uuid "bfe501fd-fbe8-48cd-bd1b-63ddc1955e23")
 	)
 	(junction
-		(at 39.37 52.07)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c1483c21-b89e-4eb6-bc0b-931eaeb7d5b2")
-	)
-	(junction
 		(at 52.07 229.87)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5320,6 +5314,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e29cd3da-944f-4305-8f0e-99007ab1d57b")
+	)
+	(junction
+		(at 43.18 52.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e9979256-068c-420b-95ba-9f78f84a257c")
 	)
 	(junction
 		(at 203.2 191.77)
@@ -5765,16 +5765,6 @@
 	)
 	(wire
 		(pts
-			(xy 39.37 71.12) (xy 39.37 52.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "31a561a1-9fac-416e-b7d2-126121ed0b15")
-	)
-	(wire
-		(pts
 			(xy 215.9 119.38) (xy 224.79 119.38)
 		)
 		(stroke
@@ -5932,16 +5922,6 @@
 			(type default)
 		)
 		(uuid "4d02431e-ddf2-454c-bcf4-88b65c13d111")
-	)
-	(wire
-		(pts
-			(xy 39.37 52.07) (xy 35.56 52.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4d816f83-22ef-40f0-a2f8-40481aa0f26c")
 	)
 	(wire
 		(pts
@@ -6112,6 +6092,16 @@
 			(type default)
 		)
 		(uuid "6b01f086-5f87-4e8e-8641-9b1e7438e45e")
+	)
+	(wire
+		(pts
+			(xy 49.53 71.12) (xy 49.53 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6b05b6f7-f781-4962-92e8-1c517e9391a9")
 	)
 	(wire
 		(pts
@@ -6405,6 +6395,16 @@
 	)
 	(wire
 		(pts
+			(xy 54.61 71.12) (xy 49.53 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9e597350-7a7b-4c4f-94f4-16b22cdb1c3c")
+	)
+	(wire
+		(pts
 			(xy 224.79 132.08) (xy 227.33 132.08)
 		)
 		(stroke
@@ -6465,7 +6465,7 @@
 	)
 	(wire
 		(pts
-			(xy 43.18 52.07) (xy 39.37 52.07)
+			(xy 35.56 52.07) (xy 43.18 52.07)
 		)
 		(stroke
 			(width 0)
@@ -6585,6 +6585,16 @@
 	)
 	(wire
 		(pts
+			(xy 43.18 52.07) (xy 49.53 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bb697347-9761-4f42-a79d-91d4be4be472")
+	)
+	(wire
+		(pts
 			(xy 158.75 191.77) (xy 165.1 191.77)
 		)
 		(stroke
@@ -6692,16 +6702,6 @@
 			(type default)
 		)
 		(uuid "c52760ff-9329-4dc2-82db-e8763315773e")
-	)
-	(wire
-		(pts
-			(xy 46.99 71.12) (xy 39.37 71.12)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c59a4b19-f100-4153-bd38-71ea206c7baf")
 	)
 	(wire
 		(pts
@@ -9081,7 +9081,7 @@
 				)
 			)
 		)
-		(property "Value" "2.2k"
+		(property "Value" "4.7K"
 			(at 246.38 38.1 90)
 			(effects
 				(font
@@ -9614,7 +9614,7 @@
 				)
 			)
 		)
-		(property "Value" "2.2k"
+		(property "Value" "4.7K"
 			(at 32.766 58.42 90)
 			(effects
 				(font
@@ -11601,7 +11601,7 @@
 				)
 			)
 		)
-		(property "Value" "2.2k"
+		(property "Value" "4.7K"
 			(at 40.64 58.42 90)
 			(effects
 				(font
@@ -12934,73 +12934,6 @@
 			(project "RP Pico TX 2.4"
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
 					(reference "#PWR04")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 50.8 71.12 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "a6086f37-773f-4e6a-9200-769409d8d406")
-		(property "Reference" "R6"
-			(at 45.72 67.818 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10K"
-			(at 45.974 69.85 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 50.8 72.898 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.vishay.com/docs/20035/dcrcwe3.pdf"
-			(at 50.8 71.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "CRCW040210K0FKED"
-			(at 50.8 71.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "55203c8a-f1e5-49ac-9c8e-9e298a062daf")
-		)
-		(pin "1"
-			(uuid "49a559e5-721a-4d79-a3ca-1b9a59bc5a2b")
-		)
-		(instances
-			(project "BLE MIOTY MODULE"
-				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -14758,15 +14691,15 @@
 		(dnp no)
 		(uuid "f2fb1091-5ee9-4966-b656-9464858ea385")
 		(property "Reference" "Rpull4"
-			(at 255.27 38.1 90)
+			(at 253.238 38.1 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "2.2k"
-			(at 253.238 38.1 90)
+		(property "Value" "4.7K"
+			(at 255.27 38.1 90)
 			(effects
 				(font
 					(size 1.27 1.27)
