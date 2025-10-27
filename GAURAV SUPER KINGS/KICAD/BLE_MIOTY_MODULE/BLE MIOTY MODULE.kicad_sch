@@ -5053,16 +5053,6 @@
 		)
 		(uuid "8db58a19-8ec5-465c-920e-2b4f3026c071")
 	)
-	(text "Accelerometer\n"
-		(exclude_from_sim no)
-		(at 96.52 119.38 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "92e09e18-23e4-4eb7-b0b1-9c0343b75e7c")
-	)
 	(text "Reset Mechanism\n"
 		(exclude_from_sim no)
 		(at 43.434 149.098 0)
@@ -5122,6 +5112,12 @@
 		(uuid "15773c35-012c-42a7-87aa-ffd3a712802e")
 	)
 	(junction
+		(at 128.27 71.12)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1ad70f2c-f665-4cf6-99eb-2634d7cf8ed6")
+	)
+	(junction
 		(at 52.07 215.9)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5150,12 +5146,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "48d7372e-66c4-4c61-91a0-5f0d47dfc1fa")
-	)
-	(junction
-		(at 130.81 119.38)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4b93657b-b390-4328-9ec6-d6073c2255ef")
 	)
 	(junction
 		(at 120.65 71.12)
@@ -6789,6 +6779,16 @@
 	)
 	(wire
 		(pts
+			(xy 128.27 57.15) (xy 128.27 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cacdab43-41b0-4c41-a383-c627d329bb17")
+	)
+	(wire
+		(pts
 			(xy 248.92 50.8) (xy 242.57 50.8)
 		)
 		(stroke
@@ -6876,16 +6876,6 @@
 			(type default)
 		)
 		(uuid "dd5131c2-ae98-4605-b417-a87367dbe2bd")
-	)
-	(wire
-		(pts
-			(xy 128.27 119.38) (xy 130.81 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ddba7014-ab73-489d-a3dc-c777a490ad6c")
 	)
 	(wire
 		(pts
@@ -8157,6 +8147,28 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "VCC, 3.3V"
+		(shape input)
+		(at 128.27 57.15 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c726767f-0140-4621-8141-00a05c7b85bc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 115.9714 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 				(hide yes)
 			)
 		)
@@ -9622,7 +9634,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "3386d937-7a75-42fa-aef9-0e87eb7107ee")
 		(property "Reference" "C24"
 			(at 130.302 79.502 0)
@@ -9755,7 +9767,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "376d8d60-91a8-41e0-8fe1-923f45d1e0ba")
 		(property "Reference" "Rpull1"
 			(at 30.734 58.166 90)
@@ -10981,7 +10993,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "6b449a88-9361-455e-8cba-ef75665148ea")
 		(property "Reference" "U2"
@@ -11807,7 +11819,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "7e891407-ca09-45a5-aade-f9d1ee4ed94b")
 		(property "Reference" "Rpull2"
 			(at 38.608 58.42 90)
@@ -12009,7 +12021,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "847991f0-d701-4d23-b796-57b69d4116e3")
 		(property "Reference" "C18"
@@ -13903,7 +13915,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "c3b855c3-0dd0-4b83-a2b5-b89ac50d7b94")
 		(property "Reference" "C10"
 			(at 122.682 79.502 0)
@@ -14170,7 +14182,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "cdd0b346-846d-4432-ab69-330abe29d36d")
 		(property "Reference" "C25"
 			(at 42.418 82.55 0)
@@ -14636,7 +14648,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "de406b08-e0cc-4125-866d-b0bb0d51e650")
 		(property "Reference" "C28"
@@ -14941,7 +14953,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "ASTX-13-C-52.000MHz-I05-T"
+		(property "Description" "ASTX-13-C-52.000MHz-I05-T (change)"
 			(at 165.1 149.86 0)
 			(effects
 				(font
