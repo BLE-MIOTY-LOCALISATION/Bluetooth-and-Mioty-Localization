@@ -1,18 +1,11 @@
-26641655280068587
-Audio_Module
-Reverb_BTDR-1H
-Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
-audio belton reverb
+26639907656617213
+ABM13W_52_0000MHZ_5_NH7U_T5
+XTAL_ABM13W-52.0000MHZ-5-NH7U-T5
+
+
 0
-7
-7
-Audio_Module
-Reverb_BTDR-1V
-Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
-audio belton reverb
-0
-7
-7
+4
+4
 Battery
 BatteryClip_Keystone_54_D16-19mm
 Battery clip for batteries with a diameter between 16-19 mm: https://www.keyelco.com/product.cfm/product_id/826
