@@ -11040,8 +11040,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "582de600-b9ba-427a-adad-5b6327cfa659")
-		(property "Reference" "J2"
-			(at 220.98 207.7385 0)
+		(property "Reference" "J1"
+			(at 222.25 207.3031 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11050,7 +11050,7 @@
 			)
 		)
 		(property "Value" "Conn_Coaxial"
-			(at 220.98 210.2754 0)
+			(at 222.25 209.8431 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11094,7 +11094,7 @@
 		(instances
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "J2")
+					(reference "J1")
 					(unit 1)
 				)
 			)
@@ -14909,7 +14909,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "0"
 			(at 242.57 116.332 90)
 			(effects
 				(font
@@ -15637,7 +15637,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f722f4c6-3ab3-461b-bef3-33064813fe1e")
-		(property "Reference" "C20"
+		(property "Reference" "C10"
 			(at 175.26 238.2773 90)
 			(effects
 				(font
@@ -15646,7 +15646,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "T491D227K010AT"
+		(property "Value" "220u"
 			(at 175.26 240.8173 90)
 			(effects
 				(font
@@ -15675,7 +15675,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "T491D227K010AT"
 			(at 171.45 236.22 0)
 			(effects
 				(font
@@ -15693,7 +15693,7 @@
 		(instances
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "C20")
+					(reference "C10")
 					(unit 1)
 				)
 			)
