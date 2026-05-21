@@ -16,10 +16,10 @@
 /* ------------------------------------------------------------------ */
 #define SX1280_NSS_PORT     GPIOA
 #define SX1280_NSS_PIN      GPIO_PIN_4   /* SPI chip-select (active low) */
-#define SX1280_RST_PORT     GPIOB
-#define SX1280_RST_PIN      GPIO_PIN_0   /* Hardware reset               */
+#define SX1280_RST_PORT     GPIOA
+#define SX1280_RST_PIN      GPIO_PIN_3   /* Hardware reset               */
 #define SX1280_BUSY_PORT    GPIOB
-#define SX1280_BUSY_PIN     GPIO_PIN_1   /* Busy / ready indicator       */
+#define SX1280_BUSY_PIN     GPIO_PIN_15  /* Busy / ready indicator       */
 
 #define LED_PORT            GPIOC
 #define LED_PIN_N           GPIO_PIN_13  /* Active-LOW on Blue Pill      */
@@ -251,13 +251,13 @@ static void GPIO_Init(void)
     HAL_GPIO_Init(SX1280_NSS_PORT, &g);
     HAL_GPIO_WritePin(SX1280_NSS_PORT, SX1280_NSS_PIN, GPIO_PIN_SET);
 
-    /* PB0 — SX1280 RESET */
+    /* PA3 — SX1280 RESET */
     g.Pin   = SX1280_RST_PIN;
     g.Mode  = GPIO_MODE_OUTPUT_PP;
     g.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(SX1280_RST_PORT, &g);
 
-    /* PB1 — SX1280 BUSY (input, no pull — driven by chip) */
+    /* PB15 — SX1280 BUSY (input, no pull — driven by chip) */
     g.Pin   = SX1280_BUSY_PIN;
     g.Mode  = GPIO_MODE_INPUT;
     g.Pull  = GPIO_NOPULL;
