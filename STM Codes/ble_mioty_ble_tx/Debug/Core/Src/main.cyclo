@@ -1,0 +1,15 @@
+../Core/Src/main.c:53:6:LED_Blink	2
+../Core/Src/main.c:63:6:SX1280_WaitBusy	3
+../Core/Src/main.c:75:9:SX1280_GetStatus	1
+../Core/Src/main.c:85:6:SX1280_SendCommand	1
+../Core/Src/main.c:92:6:SX1280_WriteBuffer	1
+../Core/Src/main.c:101:6:SX1280_SetFrequency	1
+../Core/Src/main.c:106:6:SX1280_WriteRegister	1
+../Core/Src/main.c:115:6:SX1280_InitBLE	1
+../Core/Src/main.c:149:6:SX1280_SendOnChannel	3
+../Core/Src/main.c:182:6:SX1280_SendBLEBeacon	1
+../Core/Src/main.c:193:5:main	4
+../Core/Src/main.c:257:6:SystemClock_Config	3
+../Core/Src/main.c:287:13:MX_SPI1_Init	2
+../Core/Src/main.c:315:13:MX_GPIO_Init	1
+../Core/Src/main.c:360:6:Error_Handler	1
