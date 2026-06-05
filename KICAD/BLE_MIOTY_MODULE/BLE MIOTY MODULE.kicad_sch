@@ -6587,7 +6587,7 @@
 	)
 	(wire
 		(pts
-			(xy 154.94 130.81) (xy 158.75 130.81)
+			(xy 156.21 130.81) (xy 158.75 130.81)
 		)
 		(stroke
 			(width 0)
@@ -6917,7 +6917,7 @@
 	)
 	(wire
 		(pts
-			(xy 154.94 134.62) (xy 154.94 130.81)
+			(xy 156.21 134.62) (xy 156.21 130.81)
 		)
 		(stroke
 			(width 0)
@@ -10549,7 +10549,7 @@
 		(dnp no)
 		(uuid "469d4165-7e60-4770-b2d7-4483b5811a48")
 		(property "Reference" "XTAL1"
-			(at 166.624 152.146 90)
+			(at 165.1 155.194 90)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10558,7 +10558,7 @@
 			)
 		)
 		(property "Value" "NX2016SA-52MHZ-EXS00A-CS06016"
-			(at 151.892 154.686 90)
+			(at 153.162 124.46 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11738,7 +11738,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 154.94 134.62 0)
+		(at 156.21 134.62 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11747,7 +11747,7 @@
 		(fields_autoplaced yes)
 		(uuid "7486d771-5e6c-4269-8921-960ac2a859c2")
 		(property "Reference" "#PWR020"
-			(at 154.94 140.97 0)
+			(at 156.21 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11756,7 +11756,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 154.94 139.7 0)
+			(at 156.21 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11764,7 +11764,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 154.94 134.62 0)
+			(at 156.21 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11773,7 +11773,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 154.94 134.62 0)
+			(at 156.21 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11782,7 +11782,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 154.94 134.62 0)
+			(at 156.21 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12405,7 +12405,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "7eb1d9c8-14c2-48f6-a8e0-0d8eccf31834")
-		(property "Reference" "J1"
+		(property "Reference" "J2"
 			(at 27.686 130.302 90)
 			(effects
 				(font
@@ -12459,7 +12459,7 @@
 		(instances
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "J1")
+					(reference "J2")
 					(unit 1)
 				)
 			)
@@ -15637,7 +15637,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f722f4c6-3ab3-461b-bef3-33064813fe1e")
-		(property "Reference" "C10"
+		(property "Reference" "C99"
 			(at 175.26 238.2773 90)
 			(effects
 				(font
@@ -15693,7 +15693,7 @@
 		(instances
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "C10")
+					(reference "C99")
 					(unit 1)
 				)
 			)
