@@ -1,0 +1,7 @@
+../Core/Src/main.c:45:6:SX1280_WaitBusy	3
+../Core/Src/main.c:59:9:SX1280_GetStatus	1
+../Core/Src/main.c:73:5:main	4
+../Core/Src/main.c:121:6:SystemClock_Config	3
+../Core/Src/main.c:151:13:MX_SPI1_Init	2
+../Core/Src/main.c:179:13:MX_GPIO_Init	1
+../Core/Src/main.c:218:6:Error_Handler	1
