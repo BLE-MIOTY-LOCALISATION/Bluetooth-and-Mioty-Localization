@@ -9,8 +9,8 @@
 ../Core/Src/main.c:145:6:SX1280_InitBLE	1
 ../Core/Src/main.c:197:6:SX1280_VerifyInit	1
 ../Core/Src/main.c:233:9:SX1280_SendOnChannel	4
-../Core/Src/main.c:286:6:SX1280_SendBLEBeacon	1
-../Core/Src/main.c:297:5:main	7
+../Core/Src/main.c:301:6:SX1280_SendBLEBeacon	1
+../Core/Src/main.c:313:5:main	4
 ../Core/Src/main.c:391:6:SystemClock_Config	3
 ../Core/Src/main.c:414:13:MX_SPI1_Init	2
 ../Core/Src/main.c:431:13:MX_GPIO_Init	1

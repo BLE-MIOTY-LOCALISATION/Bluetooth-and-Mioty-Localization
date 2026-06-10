@@ -28,7 +28,7 @@ void SX1280_SetFrequency(uint8_t b0, uint8_t b1, uint8_t b2);
 uint8_t SX1280_SendOnChannel(uint8_t f0, uint8_t f1, uint8_t f2, uint8_t ch);
 void SX1280_InitBLE(void);
 void SX1280_VerifyInit(void);
-void SX1280_SendBLEBeacon(uint8_t *ch37_ok, uint8_t *ch38_ok, uint8_t *ch39_ok);
+void SX1280_SendBLEBeacon(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -234,20 +234,35 @@ uint8_t SX1280_SendOnChannel(uint8_t freq0, uint8_t freq1, uint8_t freq2,
                               uint8_t ch_index) {
     // Set RF frequency for this channel
     SX1280_SetFrequency(freq0, freq1, freq2);
+    // Explicitly set modulation parameters (1 Mbps GFSK, index 0.5, BT 0.5)
+    uint8_t cmd_mod[4] = {0x8B, 0x45, 0x01, 0x20};
+    SX1280_SendCommand(cmd_mod, 4);
 
     // Build BLE ADV_NONCONN_IND PDU
+    // Build BLE ADV_NONCONN_IND PDU with Flags, Complete Local Name and a 128‑bit Service UUID
     uint8_t adv_data[] = {
-        0x02, 0x01, 0x06,                    // Flags: LE General Discoverable
-        0x07, 0x09, 'L','o','R','a','B','d'  // Complete Local Name: "LoraBd"
+        // Flags AD structure (3 bytes)
+        0x02, 0x01, 0x06,
+        // Complete Local Name AD structure (Length=7, Type=0x09)
+        0x07, 0x09, 'L','o','R','a','B','d',
+        // Complete List of 128‑bit Service UUIDs AD structure
+        0x11, 0x07,
+        // UUID: 12345678‑1234‑5678‑1234‑5678‑9ABCDEF0 (little‑endian byte order)
+        0x78, 0x56, 0x34, 0x12,
+        0x34, 0x12,
+        0x78, 0x56,
+        0x12, 0x34, 0x56, 0x78,
+        0x9A, 0xBC, 0xDE, 0xF0
     };
-    uint8_t mac[6]    = {0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA};
-    uint8_t pdu_len   = 6 + 11;  // 6 bytes MAC + 11 bytes AD data = 17
-    uint8_t payload[19];
+    uint8_t mac[6]    = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}; // BLE address in little‑endian order
+    // Payload length = MAC (6) + AD data (29) = 35 bytes
+    uint8_t pdu_len   = 6 + 29;
+    uint8_t payload[37]; // 2‑byte header + 35‑byte PDU
 
     payload[0] = 0x02;    // PDU type: ADV_NONCONN_IND
-    payload[1] = pdu_len; // length of everything after the 2-byte header
-    for (int i = 0; i < 6;  i++) payload[2 + i] = mac[i];
-    for (int i = 0; i < 11; i++) payload[8 + i] = adv_data[i];
+    payload[1] = pdu_len; // length of everything after the 2‑byte header
+    for (int i = 0; i < 6; i++) payload[2 + i] = mac[i];
+    for (int i = 0; i < 29; i++) payload[8 + i] = adv_data[i];
 
     // SetPacketParams for BLE:
     // ConnectionState=0x00, CrcLength=0x10 (3-byte CRC),
@@ -283,14 +298,15 @@ uint8_t SX1280_SendOnChannel(uint8_t freq0, uint8_t freq1, uint8_t freq2,
 // Send beacon on all 3 BLE advertising channels
 // Passes TxDone result for each channel back to caller
 // -----------------------------------------------------------------------
-void SX1280_SendBLEBeacon(uint8_t *ch37_ok, uint8_t *ch38_ok, uint8_t *ch39_ok) {
-    *ch37_ok = SX1280_SendOnChannel(0xB8, 0xC4, 0xEC, 37); // 2402 MHz
+void SX1280_SendBLEBeacon(void) {
+    SX1280_SendOnChannel(0xB8, 0xC4, 0xEC, 37); // 2402 MHz
     HAL_Delay(10);
-    *ch38_ok = SX1280_SendOnChannel(0xBA, 0x9D, 0x89, 38); // 2426 MHz
+    SX1280_SendOnChannel(0xBA, 0x9D, 0x89, 38); // 2426 MHz
     HAL_Delay(10);
-    *ch39_ok = SX1280_SendOnChannel(0xBE, 0xC4, 0xEC, 39); // 2480 MHz
+    SX1280_SendOnChannel(0xBE, 0xC4, 0xEC, 39); // 2480 MHz
     HAL_Delay(10);
 }
+
 
 /* USER CODE END 0 */
 
@@ -351,27 +367,11 @@ int main(void)
   // -----------------------------------------------------------------------
   while (1)
   {
-    uint8_t ch37_ok, ch38_ok, ch39_ok;
-    SX1280_SendBLEBeacon(&ch37_ok, &ch38_ok, &ch39_ok);
-
-    // First blink: beacon cycle fired
-    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-    HAL_Delay(150);
-    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-    HAL_Delay(100);
-
-    // Second blink: confirmation result
-    if (ch37_ok && ch38_ok && ch39_ok) {
-        // All 3 channels confirmed — short blink
-        HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-        HAL_Delay(150);
-        HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-    } else {
-        // One or more channels failed — long blink
-        HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-        HAL_Delay(500);
-        HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-    }
+    // Send a single beacon per cycle
+    SX1280_SendBLEBeacon();
+    // Simple heartbeat LED toggle
+    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+    HAL_Delay(20);
     // Second blink: confirmation result (SWAPPED)
 //	if (ch37_ok && ch38_ok && ch39_ok) {
 //		// All 3 channels confirmed — LONG blink ✅

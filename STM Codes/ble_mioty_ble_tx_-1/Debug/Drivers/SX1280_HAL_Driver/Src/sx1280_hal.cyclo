@@ -1,0 +1,13 @@
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:12:6:SX1280_HAL_WaitBusy	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:16:6:SX1280_HAL_SendCommand	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:21:6:SX1280_HAL_WriteRegister	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:25:9:SX1280_HAL_ReadRegister	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:29:6:SX1280_HAL_WriteBuffer	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:33:9:SX1280_HAL_GetStatus	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:38:6:SX1280_HAL_Init	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:45:6:SX1280_HAL_InitBLE	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:70:6:SX1280_HAL_SetFrequency	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:75:6:SX1280_HAL_SetTxPower	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:80:6:SX1280_HAL_SetAccessAddress	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:85:6:SX1280_HAL_SetCrcSeed	1
+../Drivers/SX1280_HAL_Driver/Src/sx1280_hal.c:90:6:SX1280_HAL_MapTxDoneIRQ	1
