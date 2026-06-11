@@ -2623,12 +2623,13 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "STMICROELECTRONICS - IIS2MDCTR - MEMS MODULE, 3-AXIS MAGNETOMETER, LGA-12"
 				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify bottom)
 					(hide yes)
 				)
 			)
@@ -2653,16 +2654,6 @@
 				)
 			)
 			(property "MOUSER_PRICE-STOCK" "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/IIS2MDCTR?qs=1mbolxNpo8ems1K%2FRdQzXg%3D%3D"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify bottom)
-					(hide yes)
-				)
-			)
-			(property "DESCRIPTION" "STMICROELECTRONICS - IIS2MDCTR - MEMS MODULE, 3-AXIS MAGNETOMETER, LGA-12"
 				(at 0 0 0)
 				(effects
 					(font
@@ -5734,7 +5725,7 @@
 		(uuid "b1fb81d9-09f1-4575-af6c-421f40758d38")
 	)
 	(no_connect
-		(at 105.41 68.58)
+		(at 97.79 68.58)
 		(uuid "bc76827b-75c9-4943-97a0-f1aedf18cd5f")
 	)
 	(no_connect
@@ -5742,7 +5733,7 @@
 		(uuid "c46bc01b-b653-4941-a49d-58661c58025a")
 	)
 	(no_connect
-		(at 105.41 66.04)
+		(at 97.79 66.04)
 		(uuid "e2a42125-45c7-433d-9513-a61745c78817")
 	)
 	(no_connect
@@ -6245,6 +6236,16 @@
 	)
 	(wire
 		(pts
+			(xy 97.79 73.66) (xy 109.22 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3efc8ec0-5f64-433e-bd0d-7db955e7dbcd")
+	)
+	(wire
+		(pts
 			(xy 100.33 170.18) (xy 110.49 170.18)
 		)
 		(stroke
@@ -6645,16 +6646,6 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 76.2) (xy 105.41 76.2)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7c92c503-3c44-4a21-ba57-d7431f2c81dc")
-	)
-	(wire
-		(pts
 			(xy 111.76 160.02) (xy 111.76 162.56)
 		)
 		(stroke
@@ -6712,6 +6703,16 @@
 			(type default)
 		)
 		(uuid "83ba0e2c-a069-4231-8be7-51f6bd9b7805")
+	)
+	(wire
+		(pts
+			(xy 97.79 76.2) (xy 114.3 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "84f12b7b-66a9-467d-a6da-81c5b4e4b58c")
 	)
 	(wire
 		(pts
@@ -7155,16 +7156,6 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 71.12) (xy 105.41 71.12)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c810378a-ceef-4d7f-ae1c-9c82dd8a2def")
-	)
-	(wire
-		(pts
 			(xy 115.57 170.18) (xy 115.57 172.72)
 		)
 		(stroke
@@ -7435,13 +7426,13 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 73.66) (xy 109.22 73.66)
+			(xy 97.79 71.12) (xy 109.22 71.12)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "f823def0-e0a0-4554-8b01-813aaf163116")
+		(uuid "f90b4d20-0f96-44bc-89c1-c098c9c315d0")
 	)
 	(wire
 		(pts
@@ -8867,7 +8858,7 @@
 	)
 	(global_label "INT1M"
 		(shape input)
-		(at 105.41 78.74 0)
+		(at 97.79 78.74 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -8877,7 +8868,7 @@
 		)
 		(uuid "f28ba955-de8a-4776-ae44-6c265bd24ada")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 113.959 78.74 0)
+			(at 106.339 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15894,7 +15885,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f722f4c6-3ab3-461b-bef3-33064813fe1e")
-		(property "Reference" "C99"
+		(property "Reference" "C33"
 			(at 175.26 238.2773 90)
 			(effects
 				(font
@@ -15950,7 +15941,7 @@
 		(instances
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "C99")
+					(reference "C33")
 					(unit 1)
 				)
 			)
