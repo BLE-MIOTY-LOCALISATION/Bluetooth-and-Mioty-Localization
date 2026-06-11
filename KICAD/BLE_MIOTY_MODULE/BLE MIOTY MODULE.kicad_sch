@@ -2623,12 +2623,13 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "STMICROELECTRONICS - IIS2MDCTR - MEMS MODULE, 3-AXIS MAGNETOMETER, LGA-12"
 				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify bottom)
 					(hide yes)
 				)
 			)
@@ -2653,16 +2654,6 @@
 				)
 			)
 			(property "MOUSER_PRICE-STOCK" "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/IIS2MDCTR?qs=1mbolxNpo8ems1K%2FRdQzXg%3D%3D"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify bottom)
-					(hide yes)
-				)
-			)
-			(property "DESCRIPTION" "STMICROELECTRONICS - IIS2MDCTR - MEMS MODULE, 3-AXIS MAGNETOMETER, LGA-12"
 				(at 0 0 0)
 				(effects
 					(font
@@ -15894,7 +15885,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f722f4c6-3ab3-461b-bef3-33064813fe1e")
-		(property "Reference" "C99"
+		(property "Reference" "C33"
 			(at 175.26 238.2773 90)
 			(effects
 				(font
@@ -15950,7 +15941,7 @@
 		(instances
 			(project ""
 				(path "/d849980e-7d55-47ea-bae1-1c7bda3652f5"
-					(reference "C99")
+					(reference "C33")
 					(unit 1)
 				)
 			)
