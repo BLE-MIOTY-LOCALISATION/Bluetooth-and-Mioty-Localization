@@ -25,7 +25,7 @@ void SX1280_WriteBuffer(uint8_t offset, uint8_t *data, uint8_t len);
 void SX1280_WriteRegister(uint16_t addr, uint8_t *data, uint8_t len);
 uint8_t SX1280_ReadRegister(uint16_t addr);
 void SX1280_SetFrequency(uint8_t b0, uint8_t b1, uint8_t b2);
-uint8_t SX1280_SendOnChannel(uint8_t f0, uint8_t f1, uint8_t f2, uint8_t ch);
+uint8_t SX1280_SendOnChannel(uint8_t f0, uint8_t f1, uint8_t f2, uint8_t ch, uint8_t white_seed);
 void SX1280_InitBLE(void);
 void SX1280_VerifyInit(void);
 void SX1280_SendBLEBeacon(void);
@@ -148,12 +148,12 @@ void SX1280_InitBLE(void) {
     SX1280_SendCommand(cmd_standby, 2);
     HAL_Delay(10);
 
-    // 2. Set packet type = BLE (0x05)
-    uint8_t cmd_pkt_type[2] = {0x8A, 0x05};
+    // 2. Set packet type = BLE (0x04) — per reference: PACKET_TYPE_BLE = 0x04
+    uint8_t cmd_pkt_type[2] = {0x8A, 0x04};
     SX1280_SendCommand(cmd_pkt_type, 2);
 
-    // 3. Set TX and RX buffer base addresses both to 0x00
-    uint8_t cmd_buf[3] = {0x8F, 0x00, 0x00};
+    // 3. Set TX base address = 0x80, RX base = 0x00 (matches reference SetupAdvPdu offset)
+    uint8_t cmd_buf[3] = {0x8F, 0x80, 0x00};
     SX1280_SendCommand(cmd_buf, 3);
 
     // 4. Set modulation params: 1 Mbps, MOD_IND=0.5, BT=0.5
@@ -231,47 +231,64 @@ void SX1280_VerifyInit(void) {
 // IRQ is cleared after each TX so DIO1 resets for the next channel.
 // -----------------------------------------------------------------------
 uint8_t SX1280_SendOnChannel(uint8_t freq0, uint8_t freq1, uint8_t freq2,
-                              uint8_t ch_index) {
+                              uint8_t ch_index, uint8_t white_seed) {
     // Set RF frequency for this channel
     SX1280_SetFrequency(freq0, freq1, freq2);
     // Explicitly set modulation parameters (1 Mbps GFSK, index 0.5, BT 0.5)
     uint8_t cmd_mod[4] = {0x8B, 0x45, 0x01, 0x20};
     SX1280_SendCommand(cmd_mod, 4);
 
-    // Build BLE ADV_NONCONN_IND PDU
-    // Build BLE ADV_NONCONN_IND PDU with Flags, Complete Local Name and a 128‑bit Service UUID
+    // Build BLE ADV_NONCONN_IND PDU — iBeacon format matching reference board
+    // Sniffed from reference board: ADV_NONCONN_IND, ManufacturerSpecificData (0xFF)
+    // Apple iBeacon: UUID=01020304-0506-0708-090A-0B0C0D0E0F10, Major=1, Minor=2
     uint8_t adv_data[] = {
         // Flags AD structure (3 bytes)
+        // Length=2, Type=0x01, Value=0x06 (LE General Discoverable + BR/EDR Not Supported)
         0x02, 0x01, 0x06,
-        // Complete Local Name AD structure (Length=7, Type=0x09)
-        0x07, 0x09, 'L','o','R','a','B','d',
-        // Complete List of 128‑bit Service UUIDs AD structure
-        0x11, 0x07,
-        // UUID: 12345678‑1234‑5678‑1234‑5678‑9ABCDEF0 (little‑endian byte order)
-        0x78, 0x56, 0x34, 0x12,
-        0x34, 0x12,
-        0x78, 0x56,
-        0x12, 0x34, 0x56, 0x78,
-        0x9A, 0xBC, 0xDE, 0xF0
+
+        // iBeacon Manufacturer Specific Data AD structure (27 bytes)
+        // Length=26, Type=0xFF (ManufacturerSpecificData)
+        0x1A, 0xFF,
+        // Apple Inc. company ID — little-endian (0x004C)
+        0x4C, 0x00,
+        // iBeacon subtype (0x02) + payload length (0x15 = 21 bytes)
+        0x02, 0x15,
+        // Proximity UUID: 01020304-0506-0708-090A-0B0C0D0E0F10
+        0x01, 0x02, 0x03, 0x04,
+        0x05, 0x06, 0x07, 0x08,
+        0x09, 0x0A, 0x0B, 0x0C,
+        0x0D, 0x0E, 0x0F, 0x10,
+        // Major = 1 (location zone)
+        0x00, 0x01,
+        // Minor = 2 (sub-zone)
+        0x00, 0x02,
+        // TX Power at 1 m = -59 dBm (0xC5 signed) — used for ranging
+        0xC5
     };
-    uint8_t mac[6]    = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}; // BLE address in little‑endian order
-    // Payload length = MAC (6) + AD data (29) = 35 bytes
-    uint8_t pdu_len   = 6 + 29;
-    uint8_t payload[37]; // 2‑byte header + 35‑byte PDU
+    uint8_t mac[6]    = {0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA}; // BLE address LSB-first, on-air (MSB-first): FF:EE:DD:CC:BB:AA
+    // Payload length = MAC (6) + AD data (30) = 36 bytes
+    uint8_t pdu_len   = 6 + 30;
+    uint8_t payload[38]; // 2-byte header + 36-byte PDU
 
-    payload[0] = 0x02;    // PDU type: ADV_NONCONN_IND
-    payload[1] = pdu_len; // length of everything after the 2‑byte header
+    payload[0] = 0x42;    // PDU type: ADV_NONCONN_IND (bits[1:0]=10) + TxAdd=1 (bit6) for random address
+    payload[1] = pdu_len; // length of everything after the 2-byte header
     for (int i = 0; i < 6; i++) payload[2 + i] = mac[i];
-    for (int i = 0; i < 29; i++) payload[8 + i] = adv_data[i];
+    for (int i = 0; i < 30; i++) payload[8 + i] = adv_data[i];
 
-    // SetPacketParams for BLE:
-    // ConnectionState=0x00, CrcLength=0x10 (3-byte CRC),
-    // BleTestPayload=0x00, Whitening=0x00 (enabled)
-    uint8_t cmd_pkt[8] = {0x8C, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00};
+    // SetPacketParams for BLE — exactly matching reference prepareForBeacon():
+    // SetPacketParams(0x20, 0x10, 0x04, 0x00, 0x00, 0x00, 0x00)
+    // [0x8C, ConnectionState=0x20, CrcLength=0x10, BleTestPayload=0x04, Whitening=0x00, 0x00, 0x00, 0x00]
+    // NOTE: whitening is enabled via SetWhiteningSeed (register 0x09C5), NOT via this byte
+    uint8_t cmd_pkt[8] = {0x8C, 0x20, 0x10, 0x04, 0x00, 0x00, 0x00, 0x00};
     SX1280_SendCommand(cmd_pkt, 8);
 
-    // Write PDU to TX buffer starting at offset 0
-    SX1280_WriteBuffer(0x00, payload, 19);
+    // Set whitening seed — reference uses SetWhiteningSeed(reg 0x09C5)
+    // Seeds from reference channel_table: CH37=0x53, CH38=0x33, CH39=0x73
+    SX1280_WriteRegister(0x09C5, &white_seed, 1);
+
+    // Write full 38-byte PDU to TX buffer at offset 0x80 (matches reference SetupAdvPdu/SetBufferBaseAddresses)
+    // (2-byte header + 6-byte MAC + 30-byte iBeacon AD data = 38 bytes total)
+    SX1280_WriteBuffer(0x80, payload, 38);
 
     // SetTx: periodBase=0x00 (15.625us steps), count=0x0064 (~1.56ms timeout)
     uint8_t cmd_tx[4] = {0x83, 0x00, 0x00, 0x64};
@@ -299,11 +316,13 @@ uint8_t SX1280_SendOnChannel(uint8_t freq0, uint8_t freq1, uint8_t freq2,
 // Passes TxDone result for each channel back to caller
 // -----------------------------------------------------------------------
 void SX1280_SendBLEBeacon(void) {
-    SX1280_SendOnChannel(0xB8, 0xC4, 0xEC, 37); // 2402 MHz
+    // Whitening seeds match reference project channel_table exactly:
+    // CH37=0x53, CH38=0x33, CH39=0x73
+    SX1280_SendOnChannel(0xB8, 0xC4, 0xEC, 37, 0x53); // 2402 MHz, seed=0x53
     HAL_Delay(10);
-    SX1280_SendOnChannel(0xBA, 0x9D, 0x89, 38); // 2426 MHz
+    SX1280_SendOnChannel(0xBA, 0x9D, 0x89, 38, 0x33); // 2426 MHz, seed=0x33
     HAL_Delay(10);
-    SX1280_SendOnChannel(0xBE, 0xC4, 0xEC, 39); // 2480 MHz
+    SX1280_SendOnChannel(0xBE, 0xC4, 0xEC, 39, 0x73); // 2480 MHz, seed=0x73
     HAL_Delay(10);
 }
 
