@@ -33,7 +33,7 @@
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
-
+volatile uint8_t alarm_fired = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -192,7 +192,7 @@ void SX1280_InitBLE(void) {
   uint8_t cmd_mod[4] = {0x8B, 0x45, 0x01, 0x20};
   SX1280_SendCommand(cmd_mod, 4);
 
-  // 5. Set TX output power = 0 dBm (0x12) for low current draw, ramp time =
+  // 5. Set TX output power = 0 dBm (0x12) or +13 dBm (0x1F)**board 2 where j1 is attached change it(ref:25_06.md)** for low current draw, ramp time =
   // 20us (0x20)
   uint8_t cmd_tx_params[3] = {0x8E, 0x12, 0x20};
   SX1280_SendCommand(cmd_tx_params, 3);
@@ -384,18 +384,18 @@ void RTC_Init_LowPower(void) {
   __HAL_RCC_BACKUPRESET_FORCE();
   __HAL_RCC_BACKUPRESET_RELEASE();
 
-  // 3. Enable LSI oscillator
+  // 3. Enable LSE oscillator
   RCC_OscInitTypeDef osc_init = {0};
-  osc_init.OscillatorType = RCC_OSCILLATORTYPE_LSI;
-  osc_init.LSIState = RCC_LSI_ON;
+  osc_init.OscillatorType = RCC_OSCILLATORTYPE_LSE;
+  osc_init.LSEState = RCC_LSE_ON;
   if (HAL_RCC_OscConfig(&osc_init) != HAL_OK) {
     Error_Handler();
   }
 
-  // 4. Select LSI as RTC Clock Source and enable it
+  // 4. Select LSE as RTC Clock Source and enable it
   RCC_PeriphCLKInitTypeDef clk_init = {0};
   clk_init.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-  clk_init.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  clk_init.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
   if (HAL_RCCEx_PeriphCLKConfig(&clk_init) != HAL_OK) {
     Error_Handler();
   }
@@ -410,10 +410,10 @@ void RTC_Init_LowPower(void) {
   while ((RTC->CRL & RTC_CRL_RTOFF) == 0) {
   }
 
-  // 7. Configure RTC Prescaler (for 40kHz LSI: 40000 - 1 = 39999 to get 1 Hz)
+  // 7. Configure RTC Prescaler (for 32.768kHz LSE: 32768 - 1 = 32767 to get 1 Hz)
   SET_BIT(RTC->CRL, RTC_CRL_CNF);
-  WRITE_REG(RTC->PRLH, (39999 >> 16) & 0xFFFF);
-  WRITE_REG(RTC->PRLL, 39999 & 0xFFFF);
+  WRITE_REG(RTC->PRLH, (32767 >> 16) & 0xFFFF);
+  WRITE_REG(RTC->PRLL, 32767 & 0xFFFF);
   CLEAR_BIT(RTC->CRL, RTC_CRL_CNF);
   while ((RTC->CRL & RTC_CRL_RTOFF) == 0) {
   }
@@ -432,6 +432,11 @@ void RTC_Init_LowPower(void) {
 // Set the RTC Alarm to fire 1 second from current time
 // -----------------------------------------------------------------------
 void RTC_SetAlarm_1s(void) {
+  // Clear Register Synchronized Flag (RSF) and wait for synchronization (critical after wakeup)
+  WRITE_REG(RTC->CRL, (uint32_t)~RTC_CRL_RSF);
+  while ((RTC->CRL & RTC_CRL_RSF) == 0) {
+  }
+
   while ((RTC->CRL & RTC_CRL_RTOFF) == 0) {
   }
 
@@ -499,9 +504,12 @@ void SX1280_Wakeup(void) {
 // -----------------------------------------------------------------------
 void STM32_EnterStopMode(void) {
   // 1. Put SX1280 to sleep
-//222222222222222
-
   SX1280_Sleep();
+
+  // 1b. Brief post-TX LED flash (10ms) - completely safe since RF is sleeping
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);   // LED ON
+  HAL_Delay(10);
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET); // LED OFF
 
   // 2. Disable SPI1 and clamp pins to Input Pull-Down to prevent leaks/floating states
   __HAL_SPI_DISABLE(&hspi1);
@@ -628,6 +636,9 @@ int main(void)
   // Expected: 9 blinks, 6 blinks, 3 blinks, 1 blink
   SX1280_VerifyInit();
 
+  // Turn off LED after verification blinks
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
   // Enable debug support during low power modes (keeps SWD active in Stop Mode)
   HAL_DBGMCU_EnableDBGStopMode();
 
@@ -639,6 +650,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    // 1. Transmit BLE beacon on all 3 channels
+    SX1280_SendBLEBeacon();
+
+    // 2. Shut down peripherals, flash LED, and enter Stop Mode (wakes up in 1s)
+    STM32_EnterStopMode();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -741,7 +757,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LORA_NSS_GPIO_Port, LORA_NSS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LORA_NSS_Pin|LORA_NRST_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : LED_Pin */
   GPIO_InitStruct.Pin = LED_Pin;
@@ -750,12 +766,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LORA_NSS_Pin */
-  GPIO_InitStruct.Pin = LORA_NSS_Pin;
+  /*Configure GPIO pins : LORA_NSS_Pin LORA_NRST_Pin */
+  GPIO_InitStruct.Pin = LORA_NSS_Pin|LORA_NRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LORA_NSS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LORA_DIO1_Pin LORA_BUSY_Pin */
   GPIO_InitStruct.Pin = LORA_DIO1_Pin|LORA_BUSY_Pin;
