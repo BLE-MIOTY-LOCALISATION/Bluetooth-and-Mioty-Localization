@@ -5,6 +5,23 @@
 // SPI1 handle declared in main
 extern SPI_HandleTypeDef hspi1;
 
+// -----------------------------------------------------------------------
+// STM32TsUnb - Hardware Abstraction Layer for the Fraunhofer TsUnb library
+//
+// Clock: 8 MHz (HSE direct, PLL OFF)
+//   - Required by the Mioty symbol timing below.
+//   - The cycles_per_symbol calculation is hardcoded for 8 MHz.
+//   - Changing CPU clock WILL break Mioty symbol timing.
+//
+// SPI: 4 MHz (BAUDRATEPRESCALER_2 on 8 MHz PCLK2)
+//   - Fast enough for SX1280 register writes.
+//   - Leaves headroom for DWT busy-wait timing accuracy.
+//
+// DWT (Data Watchpoint and Trace) cycle counter is used for
+// sub-microsecond symbol boundary timing. This avoids needing
+// a hardware timer and works well at 8 MHz.
+// -----------------------------------------------------------------------
+
 template <uint16_t SYMBOL_RATE_MULT = 48>
 class STM32TsUnb
 {
@@ -16,11 +33,9 @@ public:
 
     STM32TsUnb()
     {
-        // Enable DWT Cycle Counter
-        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-
         // At 8 MHz CPU clock: cycles per symbol = 8,000,000 / (49.591064453125 * SYMBOL_RATE_MULT)
+        // SYMBOL_RATE_MULT=48 gives the Lambda80 TS-UNB symbol rate (480 bps raw)
+        // DO NOT change without re-validating Mioty packet timing on air.
         cycles_per_symbol = 8000000.0 / (49.591064453125 * (double)SYMBOL_RATE_MULT);
     }
 
@@ -48,6 +63,10 @@ public:
 
     void initTimer()
     {
+        // Enable DWT Cycle Counter (required for symbol timing)
+        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
         precise_target = 0.0;
         target_cycles = 0;
     }

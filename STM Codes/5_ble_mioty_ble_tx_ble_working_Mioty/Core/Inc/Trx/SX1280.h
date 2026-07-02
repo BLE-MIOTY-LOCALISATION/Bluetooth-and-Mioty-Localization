@@ -85,6 +85,7 @@ ks-contracts@iis.fraunhofer.de
 #include <stdint.h>
 
 #include "../Utils/BitAccess.h"
+#include "../TsUnb/RadioBurst.h"
 
 namespace TsUnbLib
 {
