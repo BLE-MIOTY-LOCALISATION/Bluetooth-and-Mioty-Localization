@@ -1,0 +1,9 @@
+[submodule "STM Codes/Poucet_LCIS_LoRa24"]
+	path = STM Codes/Poucet_LCIS_LoRa24
+	url = https://github.com/Hedwyn/Poucet_LCIS_LoRa24.git
+[submodule "STM Codes/TS-UNB-Lib-STM32"]
+	path = STM Codes/TS-UNB-Lib-STM32
+	url = https://github.com/paul-adam/TS-UNB-Lib-STM32.git
+[submodule "STM Codes/open-mioty-arduino"]
+	path = STM Codes/open-mioty-arduino
+	url = https://github.com/phaseshifted-iot/open-mioty-arduino.git

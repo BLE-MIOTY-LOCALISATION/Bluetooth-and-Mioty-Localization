@@ -39166,7 +39166,7 @@
 		(property "Reference" "C33"
 			(at -0.115 1.58 180)
 			(layer "F.SilkS")
-			(uuid "d401ad7f-74ae-474a-8057-690cc0b8f4d8")
+			(uuid "244326c6-435d-48e6-9f86-96ea6cf2dc2e")
 			(effects
 				(font
 					(face "Arial")
@@ -39254,7 +39254,7 @@
 		(property "Value" "CP_EIA-1608-08_AVX-J"
 			(at 0 1.52 90)
 			(layer "F.Fab")
-			(uuid "f2ed91b8-8509-482f-9ae9-389addbd107f")
+			(uuid "1b7f8464-ca90-4f4a-8182-0afa981bcd20")
 			(effects
 				(font
 					(face "Arial")
@@ -39535,7 +39535,7 @@
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "d4505a13-b79e-4a45-9ec5-b115b065b65b")
+			(uuid "5ad4ccbf-db3f-4701-bfe2-b1b57829bd56")
 			(effects
 				(font
 					(face "Arial")
@@ -39549,7 +39549,7 @@
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "f4bb56b7-9f6e-4b47-bc40-bf128ee6a25d")
+			(uuid "a73edd23-29e1-4402-9cb5-beb3be30b007")
 			(effects
 				(font
 					(face "Arial")
