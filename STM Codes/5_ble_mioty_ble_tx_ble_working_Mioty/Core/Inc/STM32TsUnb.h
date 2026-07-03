@@ -33,10 +33,6 @@ public:
 
     STM32TsUnb()
     {
-        // At 8 MHz CPU clock: cycles per symbol = 8,000,000 / (49.591064453125 * SYMBOL_RATE_MULT)
-        // SYMBOL_RATE_MULT=48 gives the Lambda80 TS-UNB symbol rate (480 bps raw)
-        // DO NOT change without re-validating Mioty packet timing on air.
-        cycles_per_symbol = 8000000.0 / (49.591064453125 * (double)SYMBOL_RATE_MULT);
     }
 
     void spiInit(void) {}
@@ -66,6 +62,11 @@ public:
         // Enable DWT Cycle Counter (required for symbol timing)
         CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
         DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+       // At 8 MHz CPU clock: cycles per symbol = 8,000,000 / (49.591064453125 * SYMBOL_RATE_MULT)
+        // SYMBOL_RATE_MULT=48 gives the Lambda80 TS-UNB symbol rate (480 bps raw)
+        // Dynamically compute cycles per symbol using the actual CPU core frequency (SystemCoreClock)
+        // This supports any HSE crystal frequency dynamically.
+        cycles_per_symbol = (double)(SystemCoreClock*1.00025) / (49.591064453125 * (double)SYMBOL_RATE_MULT);
 
         precise_target = 0.0;
         target_cycles = 0;
@@ -74,7 +75,10 @@ public:
     void startTimer()
     {
         start_cycle = DWT->CYCCNT;
-        precise_target = cycles_per_symbol;
+        if (precise_target == 0.0)
+        {
+            precise_target = cycles_per_symbol;
+        }
         target_cycles = static_cast<uint64_t>(precise_target);
     }
 
@@ -82,7 +86,7 @@ public:
 
     void addTimerDelay(const int32_t count)
     {
-        precise_target += cycles_per_symbol * count;
+        precise_target += cycles_per_symbol * (count - 1);
         target_cycles = static_cast<uint64_t>(precise_target);
     }
 
