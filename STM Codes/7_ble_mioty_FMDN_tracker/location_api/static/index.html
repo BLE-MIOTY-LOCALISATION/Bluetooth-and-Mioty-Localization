@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FMDN Tracker Dashboard</title>
+    <meta name="description" content="Industrial IoT Localization Dashboard using Google Find My Device Network and Leaflet.js">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --panel-bg: rgba(22, 24, 33, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-glow: 0 0 12px rgba(0, 242, 254, 0.4);
+            --accent-color-1: #00f2fe;
+            --accent-color-2: #4facfe;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* App Layout */
+        .dashboard-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar Glassmorphic Panel */
+        .sidebar {
+            width: 420px;
+            height: calc(100vh - 40px);
+            margin: 20px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: flex-col;
+            position: absolute;
+            z-index: 1000;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--accent-color-1) 0%, var(--accent-color-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, var(--accent-color-2) 0%, var(--accent-color-1) 100%);
+            border: none;
+            color: #090d16;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--accent-glow);
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        .refresh-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: #090d16;
+        }
+
+        .refreshing svg {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tracker List */
+        .tracker-list-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 5px;
+            padding-bottom: 40px; /* Spacing at the bottom so last cards can scroll fully into view */
+        }
+
+        /* Custom Scrollbar */
+        .tracker-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .tracker-list-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .tracker-list-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .tracker-list-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* History list scrollbar */
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .history-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: var(--card-accent, rgba(255, 255, 255, 0.25));
+        }
+
+        .tracker-card {
+            flex-shrink: 0; /* Prevent card from shrinking under flex layouts */
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tracker-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: scale(1.01);
+        }
+
+        .tracker-card.active-card {
+            border-color: var(--card-accent, var(--accent-color-1)) !important;
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 15px var(--card-accent-glow, rgba(0, 242, 254, 0.1)) !important;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-secondary);
+        }
+        .status-dot.active {
+            background-color: var(--success-color);
+            box-shadow: 0 0 8px var(--success-color);
+        }
+
+        .card-id {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        /* Map styling */
+        #map {
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            background-color: #0b0c10;
+        }
+
+        /* Leaflet popups customization */
+        .leaflet-popup-content-wrapper {
+            background: var(--panel-bg) !important;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary) !important;
+            border-radius: 12px !important;
+            padding: 5px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+        .leaflet-popup-tip {
+            background: #161821 !important;
+            border: 1px solid var(--border-color);
+        }
+        .popup-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .popup-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent-color-1);
+        }
+        .popup-field {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .popup-field strong {
+            color: var(--text-primary);
+        }
+        .popup-maps-btn {
+            margin-top: 5px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        .popup-maps-btn:hover {
+            background: var(--accent-color-1);
+            color: #090d16;
+            border-color: var(--accent-color-1);
+        }
+
+        /* Status & Logs section in Sidebar */
+        .status-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        /* Custom pulsing marker */
+        .pulsing-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pulsing-marker-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--accent-color-1);
+            border: 2px solid white;
+            box-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
+            z-index: 2;
+        }
+        .pulsing-marker-ring {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--accent-color-1);
+            border-radius: 50%;
+            animation: pulse 1.8s infinite ease-out;
+            opacity: 0;
+            z-index: 1;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            25% { opacity: 0.6; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        /* Loading Indicator Overlay */
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(11, 12, 16, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .loader-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 242, 254, 0.15);
+            border-top: 3px solid var(--accent-color-1);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        /* Error notification banner */
+        .error-banner {
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--error-color);
+            color: #f87171;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Overlay Panel -->
+        <div class="sidebar">
+            <!-- Loader Overlay -->
+            <div id="loader" class="loader-overlay active">
+                <div class="spinner"></div>
+                <p style="font-size: 13px; color: var(--text-secondary);">Querying Google Find My API...</p>
+            </div>
+
+            <div class="header">
+                <h1>FMDN Tracker</h1>
+                <p>Industrial BLE Tags localization dashboard</p>
+            </div>
+
+            <div class="controls">
+                <span style="font-size: 14px; font-weight: 500;">Registered Devices</span>
+                <button id="refreshBtn" class="refresh-btn" onclick="fetchDeviceLocations(true)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 12a7 7 0 0 1-7 7c-3.86 0-7-3.14-7-7s3.14-7 7-7c1.9 0 3.63.76 4.9 2H14v2h6V4h-2v2.3C16.48 4.9 14.34 4 12 4 7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8h-2z"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="errorBanner" class="error-banner"></div>
+
+            <!-- List container -->
+            <div id="trackerList" class="tracker-list-container">
+                <!-- Cards injected here -->
+            </div>
+
+            <!-- Status Footer -->
+            <div class="status-footer">
+                <div class="status-badge">
+                    <span id="networkStatusDot" class="status-dot active"></span>
+                    <span>System Status: <strong style="color: var(--success-color)">Online</strong></span>
+                </div>
+                <div id="lastCheckedTime">Last checked: Never</div>
+            </div>
+        </div>
+
+        <!-- Fullscreen Leaflet Map -->
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet.js script -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+        let map;
+        let selectedDeviceId = null;
+        let deviceCache = [];
+        let activeLayers = []; // Stores currently plotted Map layers for the selected device
+
+        // Color coding themes for different devices
+        const DEVICE_COLORS = [
+            { primary: '#00f2fe', secondary: '#4facfe', glow: 'rgba(0, 242, 254, 0.35)' }, // Neon Cyan
+            { primary: '#10b981', secondary: '#059669', glow: 'rgba(16, 185, 129, 0.35)' }, // Emerald Green
+            { primary: '#f59e0b', secondary: '#d97706', glow: 'rgba(245, 158, 11, 0.35)' }, // Amber Gold
+            { primary: '#ff4e50', secondary: '#f9d423', glow: 'rgba(255, 78, 80, 0.35)' },  // Coral Red
+            { primary: '#d946ef', secondary: '#c084fc', glow: 'rgba(217, 70, 239, 0.35)' }  // Magenta Violet
+        ];
+
+        // Resolves a consistent color schema for each device
+        function getDeviceColor(index) {
+            const colorIndex = index % DEVICE_COLORS.length;
+            return DEVICE_COLORS[colorIndex];
+        }
+
+        // Initialize Leaflet Map
+        function initMap() {
+            // Default center coordinates (Nuremberg/Erlangen region, Germany matching sample response)
+            const defaultCenter = [49.5980, 11.0018];
+            map = L.map('map', {
+                zoomControl: false // Hide default zoom buttons to keep UI clean
+            }).setView(defaultCenter, 13);
+
+            // Add clean dark mode tiles
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                maxZoom: 20
+            }).addTo(map);
+
+            // Re-position zoom buttons to bottom right corner
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(map);
+        }
+
+        // Creates a dynamic custom pulsing neon icon matching the device theme color
+        function createPulsingIcon(colorObj) {
+            return L.divIcon({
+                className: 'pulsing-marker',
+                html: `
+                    <div class="pulsing-marker-dot" style="background-color: ${colorObj.primary}; box-shadow: 0 0 10px ${colorObj.primary};"></div>
+                    <div class="pulsing-marker-ring" style="border-color: ${colorObj.primary};"></div>
+                `,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+        }
+
+        // Clears all layers currently plotted on the map
+        function clearMap() {
+            activeLayers.forEach(layer => map.removeLayer(layer));
+            activeLayers = [];
+        }
+
+        // Injects loading state
+        function setLoader(active) {
+            const loader = document.getElementById('loader');
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (active) {
+                loader.classList.add('active');
+                refreshBtn.classList.add('refreshing');
+                refreshBtn.disabled = true;
+            } else {
+                loader.classList.remove('active');
+                refreshBtn.classList.remove('refreshing');
+                refreshBtn.disabled = false;
+            }
+        }
+
+        // Show error details
+        function showError(message) {
+            const banner = document.getElementById('errorBanner');
+            if (message) {
+                banner.innerText = message;
+                banner.style.display = 'block';
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+
+        // Formats timestamps
+        function formatRelativeTime(epochSeconds) {
+            if (!epochSeconds) return 'Unknown';
+            const diffMs = Date.now() - (epochSeconds * 1000);
+            const diffMin = Math.round(diffMs / 60000);
+            
+            if (diffMin < 1) return 'Just now';
+            if (diffMin === 1) return '1 minute ago';
+            if (diffMin < 60) return `${diffMin} minutes ago`;
+            
+            const hours = Math.floor(diffMin / 60);
+            if (hours === 1) return '1 hour ago';
+            if (hours < 24) return `${hours} hours ago`;
+            
+            return new Date(epochSeconds * 1000).toLocaleString();
+        }
+
+        // Fetches devices list and then gathers location telemetry for each
+        async function fetchDeviceLocations(forceRefresh = false) {
+            setLoader(true);
+            showError(null);
+            
+            try {
+                // Step 1: Query API server for registered devices list
+                const devicesUrl = forceRefresh ? '/api/ble/devices?refresh=true' : '/api/ble/devices';
+                const devResponse = await fetch(devicesUrl);
+                const devData = await devResponse.json();
+                
+                if (devData.status !== 'success') {
+                    throw new Error(devData.message || 'Failed to retrieve devices list.');
+                }
+                
+                const devices = devData.devices;
+                const trackerList = document.getElementById('trackerList');
+                trackerList.innerHTML = '';
+                
+                deviceCache = [];
+                
+                // Step 2: Fetch details for each tracker sequentially
+                for (let i = 0; i < devices.length; i++) {
+                    const deviceName = devices[i];
+                    const colorObj = getDeviceColor(i);
+                    try {
+                        const locResponse = await fetch(`/api/ble/location/${encodeURIComponent(deviceName)}?history=true`);
+                        const locData = await locResponse.json();
+                        
+                        deviceCache.push({ data: locData, color: colorObj });
+                        createTrackerCard(locData, colorObj);
+                    } catch (deviceError) {
+                        console.error(`Error querying location for device ${deviceName}:`, deviceError);
+                        // Add card in error state
+                        createTrackerCard({
+                            device_name: deviceName,
+                            status: 'FMDN Query Timeout/Offline',
+                            canonic_id: 'N/A'
+                        }, colorObj);
+                    }
+                }
+
+                // Restore active device map rendering, or default to the first one in the list on initial load
+                if (deviceCache.length > 0) {
+                    let activeRecord = deviceCache.find(item => item.data.canonic_id === selectedDeviceId);
+                    if (!activeRecord) {
+                        // Default to first device
+                        activeRecord = deviceCache[0];
+                    }
+                    selectDevice(activeRecord.data, activeRecord.color);
+                }
+
+                // Update checked time
+                document.getElementById('lastCheckedTime').innerText = `Last checked: ${new Date().toLocaleTimeString()}`;
+
+            } catch (err) {
+                console.error(err);
+                showError(`Error connecting to Flask backend: ${err.message}`);
+                document.getElementById('networkStatusDot').className = 'status-dot';
+            } finally {
+                setLoader(false);
+            }
+        }
+
+        // Activates a tracker card and displays its tracking path on the map
+        function selectDevice(data, colorObj) {
+            highlightCard(data.canonic_id, colorObj);
+            
+            const isGeo = (data.history && data.history.length > 0 && data.history.some(p => p.type === 'geo'));
+            if (isGeo) {
+                const geoPoints = data.history.filter(p => p.type === 'geo');
+                const latest = geoPoints[0];
+                
+                // Plot this device's telemetry specifically
+                plotDeviceHistoryOnMap(data, colorObj);
+                
+                // Center the map smoothly on the latest coordinate
+                map.flyTo([latest.latitude, latest.longitude], 17, {
+                    animate: true,
+                    duration: 1.2
+                });
+            } else {
+                clearMap();
+            }
+        }
+
+        // Creates a card in the sidebar panel
+        function createTrackerCard(data, colorObj) {
+            const container = document.getElementById('trackerList');
+            const card = document.createElement('div');
+            
+            const isGeo = (data.history && data.history.length > 0 && data.history.some(p => p.type === 'geo'));
+            const statusDotClass = isGeo ? 'status-dot active' : 'status-dot';
+            
+            let ageString = 'N/A';
+            let accuracyVal = 'N/A';
+            let altitudeVal = 'N/A';
+            let statusVal = 'Offline';
+            let absoluteTimeString = '';
+            let historyCount = 0;
+            let geoPoints = [];
+
+            if (isGeo) {
+                geoPoints = data.history.filter(p => p.type === 'geo');
+                const latestPoint = geoPoints[0];
+                ageString = formatRelativeTime(latestPoint.timestamp);
+                accuracyVal = `${Math.round(latestPoint.accuracy_meters)}m`;
+                altitudeVal = latestPoint.altitude ? `${latestPoint.altitude}m` : 'N/A';
+                statusVal = latestPoint.status || 'Success';
+                absoluteTimeString = new Date(latestPoint.timestamp * 1000).toLocaleString();
+                historyCount = geoPoints.length;
+            }
+
+            let historyHtml = '';
+            if (isGeo && geoPoints.length > 1) {
+                historyHtml = `
+                    <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); width: 100%; grid-column: span 2;">
+                        <span class="detail-label" style="display: block; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: ${colorObj.primary};">Location History</span>
+                        <div class="history-list" style="display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto; padding-right: 4px;">
+                            ${geoPoints.map((pt, idx) => `
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; background: rgba(255,255,255,0.02); padding: 6px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); transition: all 0.2s ease;">
+                                    <span style="color: ${idx === 0 ? colorObj.primary : 'var(--text-secondary)'}; font-weight: ${idx === 0 ? '600' : 'normal'};">
+                                        ${idx === 0 ? 'Latest' : `Point #${historyCount - idx}`}
+                                    </span>
+                                    <span style="color: var(--text-primary); font-family: monospace;">
+                                        ${pt.latitude.toFixed(5)}, ${pt.longitude.toFixed(5)}
+                                    </span>
+                                    <span style="color: var(--text-secondary); font-size: 10px;">
+                                        ${new Date(pt.timestamp * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            card.className = `tracker-card ${selectedDeviceId === data.canonic_id ? 'active-card' : ''}`;
+            card.id = `card-${data.canonic_id}`;
+
+            // Apply card CSS variables for custom glow theme
+            card.style.setProperty('--card-accent', colorObj.primary);
+            card.style.setProperty('--card-accent-glow', colorObj.glow);
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="${statusDotClass}" style="background-color: ${colorObj.primary}; box-shadow: 0 0 6px ${colorObj.primary};"></span>
+                        <span class="card-title">${data.device_name}</span>
+                    </div>
+                    ${historyCount > 1 ? `<span style="font-size: 11px; background: ${colorObj.glow}; border: 1px solid ${colorObj.primary}; color: ${colorObj.primary}; padding: 2px 8px; border-radius: 20px; font-weight: 500;">${historyCount} reports</span>` : ''}
+                </div>
+                <div class="card-id">Canonic ID: ${data.canonic_id}</div>
+                <div class="card-details">
+                    <div class="detail-item" style="grid-column: span 2;">
+                        <span class="detail-label">Last Seen</span>
+                        <span class="detail-value">${ageString} ${absoluteTimeString ? `<span style="font-size: 11px; color: var(--text-secondary); font-weight: normal; display: block; margin-top: 2px;">(${absoluteTimeString})</span>` : ''}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Accuracy</span>
+                        <span class="detail-value">${accuracyVal}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Altitude</span>
+                        <span class="detail-value">${altitudeVal}</span>
+                    </div>
+                    <div class="detail-item" style="grid-column: span 2;">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" style="color: ${isGeo ? colorObj.primary : 'var(--text-secondary)'}">${statusVal}</span>
+                    </div>
+                    ${historyHtml}
+                </div>
+            `;
+
+            // Card click listener
+            card.onclick = () => {
+                selectDevice(data, colorObj);
+            };
+
+            container.appendChild(card);
+        }
+
+        // Plots the latest position, historical trail and older markers for the selected device
+        function plotDeviceHistoryOnMap(data, colorObj) {
+            clearMap();
+
+            const history = data.history || [];
+            const geoPoints = history.filter(p => p.type === 'geo');
+            
+            if (geoPoints.length === 0) return;
+
+            // 1. Latest report details
+            const latest = geoPoints[0];
+            const latestLatLng = [latest.latitude, latest.longitude];
+
+            // 2. Draw accuracy overlay circle for latest position
+            const accuracyCircle = L.circle(latestLatLng, {
+                radius: latest.accuracy_meters,
+                color: colorObj.primary,
+                weight: 1,
+                fillColor: colorObj.primary,
+                fillOpacity: 0.05
+            }).addTo(map);
+            activeLayers.push(accuracyCircle);
+
+            // 3. Draw historical trail connecting positions chronologically (reversed order)
+            const pathCoords = [...geoPoints].reverse().map(p => [p.latitude, p.longitude]);
+            if (pathCoords.length > 1) {
+                const polyline = L.polyline(pathCoords, {
+                    color: colorObj.primary,
+                    weight: 3,
+                    opacity: 0.65,
+                    dashArray: '5, 8',
+                    lineJoin: 'round'
+                }).addTo(map);
+                activeLayers.push(polyline);
+            }
+
+            // 4. Draw smaller markers for older locations
+            for (let i = 1; i < geoPoints.length; i++) {
+                const pt = geoPoints[i];
+                const ptLatLng = [pt.latitude, pt.longitude];
+                
+                const histPopupContent = `
+                    <div class="popup-info">
+                        <div class="popup-title" style="color: ${colorObj.primary};">${data.device_name} (Historical)</div>
+                        <div class="popup-field"><strong>Status</strong>: ${pt.status}</div>
+                        <div class="popup-field"><strong>Seen</strong>: ${new Date(pt.timestamp * 1000).toLocaleString()}</div>
+                        <div class="popup-field"><strong>Accuracy</strong>: ${Math.round(pt.accuracy_meters)} meters</div>
+                        <div class="popup-field"><strong>Altitude</strong>: ${pt.altitude}m</div>
+                    </div>
+                `;
+
+                const histMarker = L.circleMarker(ptLatLng, {
+                    radius: 6,
+                    fillColor: colorObj.primary,
+                    color: '#fff',
+                    weight: 1.5,
+                    fillOpacity: 0.8
+                })
+                .bindPopup(histPopupContent)
+                .addTo(map);
+                activeLayers.push(histMarker);
+            }
+
+            // 5. Draw main pulsing marker on latest coordinates
+            const mainPopupContent = `
+                <div class="popup-info">
+                    <div class="popup-title" style="color: ${colorObj.primary};">${data.device_name} (Latest)</div>
+                    <div class="popup-field"><strong>Status</strong>: ${latest.status}</div>
+                    <div class="popup-field"><strong>Last Seen</strong>: ${new Date(latest.timestamp * 1000).toLocaleString()}</div>
+                    <div class="popup-field"><strong>Accuracy</strong>: ${Math.round(latest.accuracy_meters)} meters</div>
+                    <div class="popup-field"><strong>Altitude</strong>: ${latest.altitude}m</div>
+                    <a href="${latest.google_maps_link}" target="_blank" class="popup-maps-btn" style="background-color: ${colorObj.primary}; border-color: ${colorObj.primary}; color: #090d16;">Open in Google Maps</a>
+                </div>
+            `;
+
+            const mainMarker = L.marker(latestLatLng, {
+                icon: createPulsingIcon(colorObj)
+            })
+            .bindPopup(mainPopupContent)
+            .addTo(map);
+            activeLayers.push(mainMarker);
+
+            mainMarker.on('popupopen', () => {
+                highlightCard(data.canonic_id, colorObj);
+            });
+        }
+
+        // Highlights card in sidebar
+        function highlightCard(cid, colorObj) {
+            selectedDeviceId = cid;
+            
+            // Remove active classes
+            document.querySelectorAll('.tracker-card').forEach(el => {
+                el.classList.remove('active-card');
+            });
+            
+            // Add active class to selected card
+            const selectedCard = document.getElementById(`card-${cid}`);
+            if (selectedCard) {
+                selectedCard.classList.add('active-card');
+                if (colorObj) {
+                    selectedCard.style.setProperty('--card-accent', colorObj.primary);
+                    selectedCard.style.setProperty('--card-accent-glow', colorObj.glow);
+                }
+                selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Startup functions
+        window.onload = () => {
+            initMap();
+            fetchDeviceLocations();
+
+            // Setup auto-refresh every 2 minutes
+            setInterval(() => {
+                console.log("[Auto-Refresh] Triggering automatic location check...");
+                fetchDeviceLocations();
+            }, 120000);
+        };
+    </script>
+</body>
+</html>
