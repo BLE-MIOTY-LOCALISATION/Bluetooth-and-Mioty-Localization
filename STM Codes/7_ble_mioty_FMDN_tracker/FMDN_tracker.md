@@ -2,8 +2,8 @@
 
 > **Date**: 2026-06-28  
 > **Hardware**: STM32F103CB + Semtech SX1280  
-> **Parent project**: `BLE_tx_battery` (iBeacon firmware)  
-> **Dependency**: `GoogleFindMyTools` (Python registration & location retrieval)
+> **Parent project**: `5_ble_mioty_ble_tx_ble_working_Mioty`  
+> **Dependency**: `GoogleFindMyTools` (Python registration & location retrieval) — a separate external tool, not included in this repo; clone it alongside this project
 
 ---
 
@@ -134,7 +134,7 @@ python main.py
 
 ### Step 2: Paste EID into Firmware
 
-Open `Core/Src/main.c` and find the `fmdn_eid` array (around line 65):
+Open `Core/Src/main.c` and find the `fmdn_eid` array:
 
 ```c
 static const uint8_t fmdn_eid[20] = {

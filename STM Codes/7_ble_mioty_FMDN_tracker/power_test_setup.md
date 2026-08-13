@@ -3,7 +3,7 @@
 This document outlines the procedure for accurately measuring the ultra-low power profile of the STM32 + SX1280 FMDN Tracker firmware using a Power Analyzer (Joulemeter) or bench power supply.
 
 > [!IMPORTANT]
-> To get accurate idle current readings (~5 µA), you **must** comment out `HAL_DBGMCU_EnableDBGStopMode();` in `main.c` (around line 688) before flashing. Leaving this enabled keeps the STM32's debug block powered during Stop Mode, which will artificially inflate your idle current by hundreds of microamps.
+> To get accurate idle current readings (~5 µA), you **must** comment out `HAL_DBGMCU_EnableDBGStopMode();` in `main.c` (search for it — its line number shifts as the file changes) before flashing. Leaving this enabled keeps the STM32's debug block powered during Stop Mode, which will artificially inflate your idle current by hundreds of microamps.
 
 ---
 

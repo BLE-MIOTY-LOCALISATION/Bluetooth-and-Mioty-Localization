@@ -346,10 +346,6 @@ uint8_t SX1280_SendOnChannel(uint8_t freq0, uint8_t freq1, uint8_t freq2,
 
   // BLE random static address (6 bytes, LSB-first)
   // On-air (MSB-first): FF:EE:DD:CC:BB:AC
-  // uint8_t mac[6] = {0xAC, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
-
-  // BLE random static address (6 bytes, LSB-first)
-  // On-air (MSB-first): FF:EE:DD:CC:BB:AC
   uint8_t mac[6] = {0xAC, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
 
   // Payload length = MAC (6) + AD data (29) = 35 bytes
