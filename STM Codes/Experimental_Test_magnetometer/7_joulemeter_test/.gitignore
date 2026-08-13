@@ -1,0 +1,19 @@
+# STM32 project build outputs
+Debug/
+Release/
+
+# Local IDE configuration settings
+.settings/
+
+# Compiled object metadata files
+*.o
+*.su
+*.d
+*.elf
+*.hex
+*.bin
+*.map
+
+# OS specific files
+Thumbs.db
+.DS_Store
