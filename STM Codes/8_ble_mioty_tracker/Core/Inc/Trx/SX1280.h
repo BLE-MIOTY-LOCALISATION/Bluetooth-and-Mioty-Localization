@@ -1,0 +1,415 @@
+/* -----------------------------------------------------------------------------
+
+Software License for the Fraunhofer TS-UNB-Lib
+
+(c) Copyright  2019 - 2021 Fraunhofer-Gesellschaft zur Foerderung der angewandten
+Forschung e.V. All rights reserved.
+
+1. INTRODUCTION
+
+The Fraunhofer Telegram Splitting - Ultra Narrowband Library ("TS-UNB-Lib") is software
+that implements the ETSI TS 103 357 TS-UNB standard ("MIOTY") for wireless data
+transmission in the field of IoT. Patent licenses for necessary patent claims for
+the ETSI TS 103 357 TS-UNB standard (including those of Fraunhofer) may be obtained
+through Sisvel International S.A.
+(https://www.sisvel.com/licensing-programs/wireless-communications/mioty/license-terms)
+or through the respective patent owners individually.
+Commercially-licensed MIOTY software is also available from Fraunhofer. Users are
+encouraged to check the Fraunhofer website for additional applications
+information and documentation.
+
+2. COPYRIGHT LICENSE
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted without payment of copyright license fees provided that you
+satisfy the following conditions:
+You must retain the complete text of this software license in redistributions of
+the TS-UNB-Lib software or your modifications thereto in source code form.
+You must retain the complete text of this software license in the documentation
+and/or other materials provided with redistributions of the TS-UNB-Lib software or
+your modifications thereto in binary form.
+You must make available free of charge copies of the complete source code of the
+TS-UNB-Lib software and your modifications thereto to recipients of copies in binary form.
+The name of Fraunhofer may not be used to endorse or promote products derived
+from this software without prior written permission.
+You may not charge copyright license fees for anyone to use, copy or distribute
+the TS-UNB-Lib software or your modifications thereto.
+Your modified versions of the TS-UNB-Lib software must carry prominent notices stating
+that you changed the software and the date of any change.
+For modified versions of the TS-UNB-Lib software, the term "Fraunhofer TS-UNB-Lib"
+must be replaced by the term "Third-Party Modified Version of the Fraunhofer TS-UNB-Lib."
+
+3. NO PATENT LICENSE
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PATENT CLAIMS, including without
+limitation the patents of Fraunhofer, ARE GRANTED BY THIS SOFTWARE LICENSE.
+Fraunhofer provides no warranty of patent non-infringement with respect to this
+software.
+You may use this TS-UNB-Lib software or modifications thereto only for
+purposes that are authorized by appropriate patent licenses.
+
+4. DISCLAIMER
+
+This TS-UNB-Lib software is provided by Fraunhofer on behalf of the copyright
+holders and contributors "AS IS" and WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,
+including but not limited to the implied warranties of merchantability and
+fitness for a particular purpose. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE for any direct, indirect, incidental, special, exemplary,
+or consequential damages, including but not limited to procurement of substitute
+goods or services; loss of use, data, or profits, or business interruption,
+however caused and on any theory of liability, whether in contract, strict
+liability, or tort (including negligence), arising in any way out of the use of
+this software, even if advised of the possibility of such damage.
+
+5. CONTACT INFORMATION
+
+Fraunhofer Institute for Integrated Circuits IIS
+Attention: Division Communication Systems
+Am Wolfsmantel 33
+91058 Erlangen, Germany
+ks-contracts@iis.fraunhofer.de
+
+----------------------------------------------------------------------------- */
+
+/**
+ * @brief	Implements the transmission of radio bursts using the Semtech SX1280 module
+ *
+ * @authors Clemens Neumueller, Joerg Robert, Augusto Kloth
+ * @file	SX1280.h
+ *
+ */
+
+#ifndef SX1280_H_
+#define SX1280_H_
+
+#include <stdint.h>
+
+#include "../Utils/BitAccess.h"
+#include "../TsUnb/RadioBurst.h"
+
+namespace TsUnbLib
+{
+	namespace Trx
+	{
+
+//! Command to set the SX1280 to frequency synthesizer mode
+#define SX1280_SETMODE_FREQSYNTH 0xc1
+
+//! Command to set the SX1280 to continuous wave generator
+#define SX1280_SET_CW 0xd1
+
+//! Command to set the SX1280 to standby mode
+#define SX1280_SETMODE_STBY 0x80
+
+//! Command to sleep the SX1280
+#define SX1280_SETMODE_SLEEP 0x84
+
+//! Command to write on frequency register of SX1280
+#define SX1280_WRITE_FRF 0x86
+
+//! Command to set TX parameters pf SX1280
+#define SX1280_SETTXPARAMS 0x8e
+
+		/**
+		 * @brief Implementation of burst transmission using the Semtech SX1280
+		 *
+		 * This class implements the transmission of the radio bursts using the Semtech SX1280
+		 * transmitter module. For this purpose the transmitter is switched into the continuous
+		 * transmission mode and the symbol clock is generated by the microcontroller.
+		 *
+		 * Depending on the actual transmitter module the template parameter BOOST_PIN must be set to true.
+		 * However, some modules do only support one of the modes. For transmit powers >13dBm the BOOST_PIN
+		 * must be always set to true, which requires the module to support it.
+		 *
+		 * The template parameter F_DEV defines the frequency deviation. The SX1280 has a minimum step size of
+		 * exactly 198.3642578125. The required frequency deviation for the standard mode is 2380.371Hz / 4 =
+		 * 595.09275Hz, which require a frequency deviation of 3.
+		 *
+		 * The template class RadioBurst_T defines a radio burst data structure. The actual implementation has to
+		 * offer the methods: uint16_t getBurstLength(void), uint8_t* getBurst(void), uint16_t get_channel(void).
+		 *
+		 * At an early stage in the program the init() method shall be called. It brings the device into the sleep
+		 * mode to save energy. It is not part of the constructor to allow the user to start a watchdog before
+		 * calling the init() method.
+		 *
+		 * @tparam		Cpu_T			Plattform depended implementation
+		 * @tparam		F_DEV			Frequency deviation resgister setting
+		 * @tparam		RadioBurst_T	Radio burst class
+		 *
+		 */
+		template <class Cpu_T, uint32_t F_DEV = 3, class RadioBurst_T = TsUnb::RadioBurst<>>
+		class SX1280
+		{
+		public:
+			Cpu_T Cpu;
+			SX1280()
+			{
+				txPower = 13;
+			}
+
+			~SX1280()
+			{
+			}
+
+			/**
+			 * @brief Init method
+			 *
+			 * This module initializes the SX1280 and brings it into sleep mode.
+			 * It must be called before the send function. Furthermore, it shall
+			 * be called as early as possible in the code to bring the SX1280
+			 * into sleep mode to save energy after power on.
+			 *
+			 * @return 0 if OK, negative falue in case of errors
+			 */
+			int16_t init(void)
+			{
+				// TODO check if chips is actually present and return negative value in case of error
+				Cpu.spiInit();
+
+				Cpu.initTimer();
+
+				// Give the system the time of four bits to initialize everything (approx. 10ms)
+				Cpu.addTimerDelay(4);
+				Cpu.startTimer();
+				Cpu.waitTimer();
+				Cpu.stopTimer();
+
+				// Read register 0xc0 and check if 0x40, if no there is no chip or chip could not be calibrated
+				{
+					uint8_t spiData[2] = {0xc0, 0};
+					Cpu.spiSendReceive(spiData, 2);
+					if (spiData[1] != 0x40)
+					{
+						// Chip not found!
+						Cpu.spiDeinit();
+
+						return -1;
+					}
+				}
+
+				setSleepMode();
+
+				Cpu.spiDeinit();
+
+				return 0;
+			}
+
+			int16_t transmit(const RadioBurst_T *const Bursts, const uint16_t numTxBursts, const uint32_t frequency)
+			{
+				Cpu.spiInit();
+
+				Cpu.initTimer();
+				// setTxPwrReg(txPower); // configured power is not saved during sleep mode
+				setStandbyModeXOSC();
+
+				// Give the system the time of four bits to initialize everything (approx. 10ms)
+				Cpu.addTimerDelay(4);
+				Cpu.startTimer();
+
+				for (uint16_t burstIdx = 0; burstIdx < numTxBursts; ++burstIdx)
+				{
+					Cpu.resetWatchdog();
+
+					// Special handling in case of zero length bursts
+					if (Bursts[burstIdx].getBurstLength() == 0)
+					{
+						Cpu.waitTimer();
+						if (burstIdx + 1 < numTxBursts)
+						{
+							Cpu.addTimerDelay((int16_t)Bursts[burstIdx].get_T_RB() - Bursts[burstIdx].getBurstLength());
+						}
+						continue;
+					}
+
+					const uint32_t cFrequency = (uint32_t)Bursts[burstIdx].getCarrierOffset();
+
+					/*
+					 * Transmission of very first bit of the radio burst. We
+					 * have to switch on the transmitter
+					 */
+					const uint8_t bit = readBit(0, Bursts[burstIdx].getBurst());
+					const uint32_t modFreq = frequency + cFrequency + calcFdev(bit);
+					Cpu.waitTimer();
+					setStandbyModeXOSC();
+					Cpu.waitTimer();
+					setTxPwrReg(txPower);
+					Cpu.waitTimer();
+					setFrequencyReg(modFreq);
+					Cpu.waitTimer();
+					setContinuousWave();
+
+					/*
+					 * Transmission of all remaining bits in the burst.
+					 */
+					for (uint16_t bitIdx = 1; bitIdx < Bursts[burstIdx].getBurstLength(); ++bitIdx)
+					{
+						const uint8_t bit = readBit(bitIdx, Bursts[burstIdx].getBurst());
+						const uint32_t modFreq = frequency + cFrequency + calcFdev(bit);
+						Cpu.waitTimer();
+						setFrequencyReg(modFreq);
+					}
+
+					Cpu.waitTimer();
+
+					setSleepMode();
+
+					/*
+					 * If we are not in the last burst wait for the next burst to start.
+					 * If we are in the last burst we do not have to restart the counter again.
+					 * We wake up the transceiver three cycles before in order to switch it on properly and configure it
+					 */
+					if (burstIdx <= numTxBursts)
+					{
+						Cpu.addTimerDelay((int16_t)Bursts[burstIdx].get_T_RB() - Bursts[burstIdx].getBurstLength() - 3);
+					}
+				}
+				Cpu.stopTimer();
+				Cpu.spiDeinit();
+
+				return 0;
+			}
+
+			/**
+			 * @brief Sets the transmit power
+			 *
+			 * This method is used to set the transmit power in dBm.
+			 * The default transmit power is 13dBm.
+			 *
+			 * @param 	power	Transmit power in dBm
+			 */
+			void setTxPower(const int8_t power)
+			{
+				txPower = power;
+			}
+
+		private:
+			/**
+			 * @brief Set frequency register
+			 *
+			 * This method sets the frequency register to the value frequency.
+			 * Caution: This method assumes that SPI is initialized!
+			 *
+			 */
+			void setFrequencyReg(const uint32_t frequency)
+			{
+				/*
+				 * Union to simplify byte access.
+				 */
+				union splituint32
+				{
+					uint8_t bytes[4];
+					uint32_t single;
+				};
+				union splituint32 regVal;
+				regVal.single = frequency;
+				uint8_t data[4] = {
+					SX1280_WRITE_FRF, regVal.bytes[2],
+					regVal.bytes[1], regVal.bytes[0]};
+				Cpu.spiSend(data, 4);
+			}
+
+			/**
+			 * @brief Set the transmit power register
+			 *
+			 * This methods sets the transmit power in the register.
+			 * Caution: This method assumes that SPI is initialized!
+			 *
+			 * Details how on setting the transmit power can be found
+			 * in the SX1280 datasheet.
+			 *
+			 * @param	power	Transmit power in dBm
+			 *
+			 * @return	The actually set transmit power.
+			 */
+			int8_t setTxPwrReg(int8_t power)
+			{
+				// Limit to valid power range
+				if (power > 13)
+					power = 13;
+				if (power < -18)
+					power = -18;
+
+				uint8_t regPower = power + 18;
+				uint8_t data[3] = {SX1280_SETTXPARAMS, regPower, 0xe0};
+				// 0Xe0 is a ramp time of 20 us
+				Cpu.spiSend(data, 3);
+
+				return power;
+			}
+
+			/**
+			 * @brief Set SX1280 sleep mode
+			 *
+			 * This methods puts the SX1280 in sleep mode and saves its RAM data.
+			 * Caution: This method assumes that SPI is initialized!
+			 */
+			void setSleepMode()
+			{
+				// 0x01 on second byte is the command to save some registers before sleeping
+				uint8_t data[2] = {SX1280_SETMODE_SLEEP, 0x01};
+				Cpu.spiSend(data, 2);
+			}
+
+			/**
+			 * @brief Set SX1280 standby mode
+			 *
+			 * This method puts the SX1280 in standby mode and running on 52 MHz crystal oscillator.
+			 * Caution: This method assumes that SPI is initialized!
+			 */
+			void setStandbyModeXOSC()
+			{
+				// 0x01 on second bytes turns also the 52 MHz oscillator on
+				uint8_t data[2] = {SX1280_SETMODE_SLEEP, 0x01};
+				Cpu.spiSend(data, 2);
+			}
+
+			/**
+			 * @brief Set SX1280 Frequency Synthesizer mode
+			 *
+			 * This method puts the SX1280 in Frequency Synthesizer mode.
+			 * Caution: This method assumes that SPI is initialized!
+			 */
+			void setFreqSynthesisMode()
+			{
+				uint8_t data = SX1280_SETMODE_FREQSYNTH;
+				Cpu.spiSend(&data, 1);
+			}
+
+			/**
+			 * @brief Set SX1280 Continuous Wave
+			 *
+			 * This method generates a RF tone on a predefined frequency.
+			 * Caution: This method assumes that SPI is initialized!
+			 */
+			void setContinuousWave()
+			{
+				uint8_t data = SX1280_SET_CW;
+				Cpu.spiSend(&data, 1);
+			}
+
+			/**
+			 * @brief Calculates the frequency deviation
+			 *
+			 * This method calculates the frequency deviation for each bit
+			 * and returns it in frequency register offset.
+			 *
+			 * @param	bit	Bit value, i.e. 0 or 1
+			 *
+			 * @return	Frequency deviation in register values
+			 */
+			int16_t calcFdev(const uint8_t bit) const
+			{
+				if (bit)
+					return F_DEV;
+				else
+					return -(int16_t)F_DEV;
+			}
+
+			//! Internal register to store the transmit power
+			int8_t txPower;
+		};
+
+	}; // namespace Trx
+}; // namespace TsUnbLib
+
+#endif /*SX1280_H_*/
