@@ -17,3 +17,8 @@ Release/
 # OS specific files
 Thumbs.db
 .DS_Store
+
+# location_api Python environment (recreate with location_api\setup.ps1)
+location_api/venv/
+__pycache__/
+*.pyc

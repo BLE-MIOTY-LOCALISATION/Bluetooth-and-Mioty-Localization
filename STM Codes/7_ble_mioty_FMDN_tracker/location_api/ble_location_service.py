@@ -1,19 +1,36 @@
 import os
 import sys
 
-# Setup path to sibling GoogleFindMyTools
+# Setup path to sibling GoogleFindMyTools -- vendored two levels up
+# (repo_root/GoogleFindMyTools), a sibling of 7_ble_mioty_FMDN_tracker,
+# not of location_api itself.
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-MIOTY_BLE_TESTS_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
-GFMT_DIR = os.path.join(MIOTY_BLE_TESTS_DIR, "GoogleFindMyTools")
+REPO_ROOT = os.path.dirname(os.path.dirname(CURRENT_DIR))
+GFMT_DIR = os.path.join(REPO_ROOT, "GoogleFindMyTools")
 if os.path.exists(GFMT_DIR):
     sys.path.insert(0, GFMT_DIR)
 else:
-    sys.path.insert(0, r"c:\Users_windows\Chandu B Reddy\Projects\LOcalee\Board-standalone-bring-up\MIOTY_BLE_Tests\GoogleFindMyTools")
+    raise FileNotFoundError(
+        f"GoogleFindMyTools not found at {GFMT_DIR} -- expected as a sibling "
+        f"of 7_ble_mioty_FMDN_tracker at the repo root. See FMDN_tracker.md."
+    )
 
 from NovaApi.ListDevices.nbe_list_devices import request_device_list
 from ProtoDecoders.decoder import parse_device_list_protobuf, get_canonic_ids
 from SpotApi.UploadPrecomputedPublicKeyIds.upload_precomputed_public_key_ids import refresh_custom_trackers
 from fmdn_client import query_location_for_device
+
+# Device names to exclude from this dashboard entirely -- e.g. personal
+# phones/tablets that also happen to be registered to the same Google
+# account as the tracker hardware. Filtered out at the source here so they
+# never reach the API or frontend at all (not just hidden in the UI),
+# which matters for demos/screenshots/recordings where the raw network
+# response could otherwise expose them. Add any device name shown in the
+# dashboard that isn't project hardware.
+HIDDEN_DEVICE_NAMES = {
+    "Reno 11",
+    "Galaxy Tab S9 FE",
+}
 
 class BLELocationService:
     def __init__(self):
@@ -26,13 +43,17 @@ class BLELocationService:
         try:
             result_hex = request_device_list()
             device_list = parse_device_list_protobuf(result_hex)
-            
+
             # Refresh the tracker (handles the 4-day announcement refresh)
             refresh_custom_trackers(device_list)
-            
-            # Map device name to canonic_id
+
+            # Map device name to canonic_id, excluding anything in HIDDEN_DEVICE_NAMES
             canonic_ids = get_canonic_ids(device_list)
-            self.devices = {name: canonic_id for name, canonic_id in canonic_ids}
+            self.devices = {
+                name: canonic_id
+                for name, canonic_id in canonic_ids
+                if name not in HIDDEN_DEVICE_NAMES
+            }
             print(f"[BLELocationService] Loaded devices: {list(self.devices.keys())}")
         except Exception as e:
             print(f"[BLELocationService] Failed to refresh devices: {e}")

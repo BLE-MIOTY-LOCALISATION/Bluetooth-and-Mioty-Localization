@@ -2,7 +2,7 @@
 
 This directory implements a Python location service, a Flask REST API, and an interactive **Leaflet.js visual map dashboard** for querying tracker positions reported through the Google Find My Device Network (FMDN).
 
-It reuses the sibling `GoogleFindMyTools` dependencies, configuration, and end-to-end encrypted Google auth keys, without modifying any third-party code.
+It reuses `GoogleFindMyTools` dependencies, configuration, and end-to-end encrypted Google auth keys, vendored locally at the project root (`Sx-1280-bring up local\GoogleFindMyTools`) so this project is self-contained and does not depend on any path outside the repo.
 
 ---
 
@@ -103,15 +103,31 @@ curl.exe -s "http://127.0.0.1:5000/api/ble/location/Tracker%20A"
 
 ---
 
-## 5. How to Launch
+## 5. First-Time Setup
 
-1. In your shell, navigate to the `location_api` directory.
-2. Run the server using the Python interpreter from `GoogleFindMyTools`'s virtual environment (adjust the path to match your own `GoogleFindMyTools` checkout location):
+Neither the virtual environment nor your Google auth token are committed to git (both are gitignored — see `GoogleFindMyTools/.gitignore`), so **every person who clones this repo needs to do this setup once**, using their own Google account. Full walkthrough (one setup script + the one-time Google login) lives in `../FMDN_tracker.md`, "Step 0: One-Time Environment Setup" — follow that first.
+
+Short version, from this folder:
+```bash
+.\setup.ps1                                       # creates ./venv, installs everything
+.\venv\Scripts\python.exe ..\..\GoogleFindMyTools\main.py   # one-time interactive Google login
+```
+
+You'll only see devices registered to *your own* Google account. To see a specific tracker (e.g. someone else's hardware), it needs to be registered/shared to your account first — auth tokens are inherently per-account and aren't something that should be shared between people.
+
+## 6. How to Launch
+
+1. From `location_api/`:
    ```bash
-   & "<path-to-GoogleFindMyTools>\venv\Scripts\python.exe" app.py
+   .\run_dashboard.ps1
    ```
-3. Open a browser to:
-   ```url
-   http://127.0.0.1:5000/
-   ```
-   The dashboard fetches your active Google account's tracker devices and draws their positions live on the map.
+2. Flask prints its own startup output, including a `WARNING: This is a development server...` line — that's standard boilerplate, safe to ignore for local/personal use, not a sign anything is wrong. It then lists **two addresses** (`app.py` binds to `0.0.0.0`, all network interfaces, not just this machine):
+
+   | Address | Reachable from | Use it for |
+   | :--- | :--- | :--- |
+   | `http://127.0.0.1:5000/` | Only this computer | Normal local use — default choice |
+   | `http://<other IP>:5000/` (e.g. `192.168.x.x`) | Any device on the same WiFi/network | Checking the dashboard from another device (e.g. your phone) |
+
+   The dashboard shows real device location data. Only use the second (LAN) address on a network you actually trust — never on shared/public WiFi (university, cafe, etc.), since anyone else on that network could browse straight to it with no login of their own required.
+3. Open the address you chose in a browser. The dashboard fetches your active Google account's tracker devices and draws their positions live on the map.
+4. Press `Ctrl+C` in the terminal to stop the server.

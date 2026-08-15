@@ -3,7 +3,7 @@
 > **Date**: 2026-06-28  
 > **Hardware**: STM32F103CB + Semtech SX1280  
 > **Parent project**: `5_ble_mioty_ble_tx_ble_working_Mioty`  
-> **Dependency**: `GoogleFindMyTools` (Python registration & location retrieval) — a separate external tool, not included in this repo; clone it alongside this project
+> **Dependency**: `GoogleFindMyTools` (Python registration & location retrieval) — vendored at the repo root, two levels up from this file
 
 ---
 
@@ -112,25 +112,42 @@ Total on-air: 2 + 6 + 3 + 26 = 37 bytes
 
 ## 5. How to Use — Step by Step
 
-### Step 1: Register a Tracker with Google
+### Step 0: One-Time Environment Setup
+
+Everything needed to talk to Google (register a tracker, retrieve locations, and run the `location_api` dashboard) lives in one local virtual environment, set up with a single script:
 
 ```bash
-cd MIOTY_BLE_Tests/GoogleFindMyTools/
-
-# Create virtual environment (first time only)
-python -m venv venv
-venv\Scripts\activate
-
-# Install dependencies (first time only)
-pip install -r requirements.txt
-
-# Run the tool
-python main.py
+cd location_api
+.\setup.ps1
 ```
 
-1. Authenticate with your Google account when Chrome opens
-2. When the device list appears, press **`r`** to register a new device
-3. **Copy the 40-character hex EID** that is displayed — this is shown only once!
+This creates `location_api\venv\` and installs both `GoogleFindMyTools`'s dependencies and the dashboard's own — nothing is installed outside `location_api\`, and nothing outside it is required except `GoogleFindMyTools` itself, which is already vendored as a sibling folder at the repo root. Safe to re-run any time (skips venv creation if one already exists).
+
+One thing this script *can't* do for you: the first-time Google login. That's an interactive, Chrome-based OAuth flow tied to your own Google account — there's no way to script around a real person logging in. Do that once, from `location_api\`, using the venv `setup.ps1` just created:
+
+```bash
+.\venv\Scripts\python.exe ..\..\GoogleFindMyTools\main.py
+```
+
+Chrome opens, you log in, and the device list appears. This same command is also how you register a new tracker and retrieve locations later (Steps 1 and 4 below) — just run it again.
+
+### Step 1: Register a Tracker with Google
+
+With the device list showing (from the command above), press **`r`** and hit Enter to register a new tracker. `GoogleFindMyTools` runs a pure cloud API call to Google's Spot backend (no ESP32/Zephyr-specific logic involved, despite the internal function being named `register_esp32` — an STM32 tracker consuming its output works identically) that:
+
+1. Generates a random 32-byte key
+2. Derives a 20-byte Ephemeral Identifier (EID) from it
+3. Registers both with Google
+4. Prints the EID once, in a box like this:
+
+```
++------------------------------------------------------------------------------+
+|                   a1b2c3d4e5f6071829304a5b6c7d8e9f0a1b2c3d                   |
+|                             Advertisement Key                                |
++------------------------------------------------------------------------------+
+```
+
+**Copy that 40-character hex string** — it's shown only once. Note: the tool's terminal output calls this the **"Advertisement Key"** — that's the same thing this doc calls the EID, not a separate value. `ESP32Firmware/` and `ZephyrFirmware/` (in `GoogleFindMyTools`) consume this exact same output for their own trackers; this project just feeds it into STM32 firmware instead.
 
 ### Step 2: Paste EID into Firmware
 
@@ -154,20 +171,24 @@ static const uint8_t fmdn_eid[20] = {
 };
 ```
 
+This is what makes the tracker traceable: once flashed, the firmware broadcasts this exact EID over BLE. Any nearby Android phone that hears it reports it to Google, tagged with this EID — which Google's backend already associates with your account from the registration step above. That's the whole link between "a byte array in firmware" and "a pin on a map."
+
 ### Step 3: Build & Flash
 
-1. Open `FMDN_tracker` folder in STM32CubeIDE
+1. Open the `7_ble_mioty_FMDN_tracker` folder in STM32CubeIDE
 2. Build the project (Ctrl+B)
 3. Flash to your board via ST-Link
 
 ### Step 4: Retrieve Locations
 
 ```bash
-cd MIOTY_BLE_Tests/GoogleFindMyTools/
-python main.py
+cd location_api
+.\venv\Scripts\python.exe ..\..\GoogleFindMyTools\main.py
 # Select your tracker number from the list
-# → Decrypted lat/lng/altitude + Google Maps link will be displayed
+# -> Decrypted lat/lng/altitude + Google Maps link will be displayed
 ```
+
+Or, for the visual dashboard instead of the command-line tool, see `location_api\walkthrough.md` — same underlying data, plotted on a live map (run `.\run_dashboard.ps1` after Step 0's setup).
 
 ---
 
@@ -175,9 +196,21 @@ python main.py
 
 The EID on the device **never changes**. However, the server-side "announcement" that tells Google's network to look for your EID **expires every 4 days** (96 hours).
 
-**To refresh**: Simply re-run `python main.py` — the tool automatically calls `UploadPrecomputedPublicKeyIds` to announce the next 4 days of EID slots.
+**Easiest way to refresh**: just launch the dashboard as normal —
+```bash
+cd location_api
+.\run_dashboard.ps1
+```
+`BLELocationService.__init__()` (`ble_location_service.py:20-21`) calls `refresh_devices()` automatically on startup, which calls `refresh_custom_trackers()` — the same 4-day announcement renewal `main.py` does. Starting the server is enough; you don't need to open the browser or separately run `main.py` just for this.
 
-**To automate**: Set up a Windows Task Scheduler job or cron job to run `main.py` every 3 days.
+**Alternative**: re-run `python main.py` directly —
+```bash
+cd location_api
+.\venv\Scripts\python.exe ..\..\GoogleFindMyTools\main.py
+```
+Also calls `UploadPrecomputedPublicKeyIds` to announce the next 4 days of EID slots. Equivalent to the dashboard method above; use this if you want the CLI device list instead of the map.
+
+**To automate**: Set up a Windows Task Scheduler job or cron job to run either command every 3 days (a day's margin before the 4-day expiry).
 
 ---
 
