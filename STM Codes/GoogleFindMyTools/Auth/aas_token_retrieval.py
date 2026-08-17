@@ -30,5 +30,11 @@ def get_aas_token():
     return get_cached_value_or_set('aas_token', _generate_aas_token)
 
 
+def invalidate_aas_token():
+    """Drops the cached AAS token and re-runs the interactive login flow to get a fresh one."""
+    set_cached_value('aas_token', None)
+    return get_aas_token()
+
+
 if __name__ == '__main__':
     print(get_aas_token())
