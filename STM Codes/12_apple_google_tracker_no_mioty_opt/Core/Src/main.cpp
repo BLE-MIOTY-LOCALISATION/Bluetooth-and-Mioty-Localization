@@ -124,6 +124,25 @@ void LED_Boot_Sequence(void)
 }
 
 /* ============================================================
+ *  Independent Watchdog (IWDG) — Hardware Self-Healing
+ * ============================================================ */
+static void IWDG_Init_10s(void)
+{
+    // LSI is ~40 kHz. Prescaler 256 -> 40 kHz / 256 = 156.25 Hz (~6.4 ms per tick)
+    // Reload 1562 -> 1562 * 6.4 ms = ~10.0 seconds timeout
+    IWDG->KR  = 0x5555; // Enable write access to IWDG_PR and IWDG_RLR
+    IWDG->PR  = 0x06;   // Prescaler divide by 256
+    IWDG->RLR = 1562;   // 10-second timeout
+    IWDG->KR  = 0xAAAA; // Reload counter
+    IWDG->KR  = 0xCCCC; // Start independent watchdog
+}
+
+static inline void IWDG_Refresh(void)
+{
+    IWDG->KR = 0xAAAA; // Kick watchdog
+}
+
+/* ============================================================
  *  SX1280 Low-Level SPI Primitives
  * ============================================================ */
 void SX1280_WaitBusy(void)
@@ -131,11 +150,8 @@ void SX1280_WaitBusy(void)
     uint32_t timeout = HAL_GetTick();
     while (HAL_GPIO_ReadPin(LORA_BUSY_GPIO_Port, LORA_BUSY_Pin) == GPIO_PIN_SET) {
         if ((HAL_GetTick() - timeout) > 1000) {
-            // BUSY stuck: rapid blink forever
-            while (1) {
-                HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-                HAL_Delay(50);
-            }
+            // Radio BUSY line stuck: auto-recover via system reset instead of permanent hang
+            NVIC_SystemReset();
         }
     }
 }
@@ -422,8 +438,14 @@ void STM32_EnterStopMode(uint32_t seconds)
     while ((RTC->CRL & RTC_CRL_RSF) == 0) {}
     while ((RTC->CRL & RTC_CRL_RTOFF) == 0) {}
 
-    uint32_t cnt = ((uint32_t)RTC->CNTH << 16) | RTC->CNTL;
-    uint32_t alarm_val = cnt + seconds;
+    // Atomic read of RTC 32-bit counter (prevents CNTH/CNTL rollover glitch)
+    uint32_t cnt1, cnt2;
+    do {
+        cnt1 = ((uint32_t)RTC->CNTH << 16) | RTC->CNTL;
+        cnt2 = ((uint32_t)RTC->CNTH << 16) | RTC->CNTL;
+    } while (cnt1 != cnt2);
+
+    uint32_t alarm_val = cnt1 + seconds;
 
     SET_BIT(RTC->CRL, RTC_CRL_CNF);
     WRITE_REG(RTC->ALRH, (alarm_val >> 16) & 0xFFFF);
@@ -431,6 +453,9 @@ void STM32_EnterStopMode(uint32_t seconds)
     SET_BIT(RTC->CRH, RTC_CRH_ALRIE);
     CLEAR_BIT(RTC->CRL, RTC_CRL_CNF);
     while ((RTC->CRL & RTC_CRL_RTOFF) == 0) {}
+
+    // Refresh watchdog right before entering sleep
+    IWDG_Refresh();
 
     // 11. Suspend SysTick (prevent 1ms tick from waking CPU)
     HAL_SuspendTick();
@@ -633,19 +658,27 @@ int main(void)
     // Boot LED sequence: confirms MCU + radio initialization complete
     LED_Boot_Sequence();
 
-    // Initialize RTC for 10-second wakeup intervals
+    // Initialize RTC for low-power wakeup
     RTC_Init_LowPower();
     debug_stage = 9;
+
+    // Start 10-second hardware independent watchdog (self-healing guard)
+    IWDG_Init_10s();
+
     /* ============================================================
      *  Main Loop
      *
-     *  Every 1 second:
+     *  Every 3 seconds:
      *    - Wake up from Stop Mode via RTC alarm
-     *    - Reinitialize BLE, send FMDN + Apple beacon (takes ~20ms)
-     *    - Enter Stop Mode (sleep until next RTC alarm)
+     *    - Refresh hardware watchdog
+     *    - Send Google FMDN + Apple Find My beacons
+     *    - Re-enter Stop Mode
      * ============================================================ */
     while (1)
     {
+        // Kick watchdog every 3s cycle (resets if frozen for >10s)
+        IWDG_Refresh();
+
         /* --- BLE cycle --- */
         debug_stage = 20;
         SX1280_InitBLE();
@@ -676,12 +709,8 @@ int main(void)
  * ============================================================ */
 void Error_Handler(void)
 {
-    __disable_irq();
-    while (1)
-    {
-        HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-        HAL_Delay(100);
-    }
+    // Auto-recover from any peripheral or clock initialization fault
+    NVIC_SystemReset();
 }
 
 #ifdef USE_FULL_ASSERT
