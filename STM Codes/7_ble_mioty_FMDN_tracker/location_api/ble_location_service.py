@@ -69,8 +69,8 @@ class BLELocationService:
         except Exception as e:
             print(f"[BLELocationService] Failed to refresh devices: {e}")
 
-    def fetch_apple_locations(self):
-        """Fetches and decrypts Apple Find My locations from macless-haystack endpoint."""
+    def fetch_apple_locations(self, device_name="BLE MIOTY TRACKER I"):
+        """Fetches and decrypts Apple Find My locations from macless-haystack endpoint for a specific tracker."""
         apple_reports = []
         try:
             # 1. Read the Apple keys
@@ -84,8 +84,15 @@ class BLELocationService:
                 keys_data = json.load(f)
 
             private_key_b64 = None
-            if isinstance(keys_data, list) and len(keys_data) > 0:
-                private_key_b64 = keys_data[0].get('privateKey')
+            if isinstance(keys_data, list):
+                # Search by device name or fallback to index
+                for k in keys_data:
+                    if k.get("name") == device_name:
+                        private_key_b64 = k.get("privateKey") or k.get("private_key")
+                        break
+                if not private_key_b64 and len(keys_data) > 0:
+                    idx = 1 if device_name == "BLE MIOTY TRACKER II" and len(keys_data) > 1 else 0
+                    private_key_b64 = keys_data[idx].get('privateKey') or keys_data[idx].get('private_key')
             elif isinstance(keys_data, dict):
                 private_key_b64 = keys_data.get('private_key') or keys_data.get('privateKey')
             
@@ -220,11 +227,9 @@ class BLELocationService:
                     })
                 formatted_locations.append(report)
         
-        # Merge Apple locations only for the physical hardware tracker that actually broadcasts
-        # the Apple Find My key (BLE MIOTY TRACKER I). This prevents un-flashed devices like
-        # BLE MIOTY TRACKER II from mistakenly showing duplicate Apple reports.
-        if device_name == "BLE MIOTY TRACKER I":
-            apple_reports = self.fetch_apple_locations()
+        # Merge Apple locations for hardware trackers broadcasting an Apple Find My key
+        if device_name in ("BLE MIOTY TRACKER I", "BLE MIOTY TRACKER II"):
+            apple_reports = self.fetch_apple_locations(device_name)
             formatted_locations.extend(apple_reports)
         
         if not formatted_locations:

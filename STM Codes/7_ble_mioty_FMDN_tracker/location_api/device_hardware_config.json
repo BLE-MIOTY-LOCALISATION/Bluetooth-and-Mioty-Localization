@@ -33,21 +33,28 @@
   },
   "BLE MIOTY TRACKER II": {
     "device_name": "BLE MIOTY TRACKER II",
-    "hardware": "STM32F103CB + SX1280 (Google FMDN only)",
-    "firmware_source": "STM Codes/11_apple_google_tracker_no_mioty/Core/Src/main.cpp",
+    "hardware": "STM32F103CB + SX1280 (Dual BLE Google + Apple)",
+    "firmware_source": "STM Codes/12_apple_google_tracker_no_mioty_opt/Core/Src/main.cpp",
     "google": {
       "supported": true,
       "eid_hex": "0C981DBBF5DDE01E6E04F10668DBF3F68ABC2FCF",
       "eid_c_array": "{0x0C, 0x98, 0x1D, 0xBB, 0xF5, 0xDD, 0xE0, 0x1E, 0x6E, 0x04, 0xF1, 0x06, 0x68, 0xDB, 0xF3, 0xF6, 0x8A, 0xBC, 0x2F, 0xCF}",
-      "mac_address": "AC:BB:CC:DD:EE:FF",
-      "mac_c_array": "{0xAC, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}",
+      "mac_address": "BC:BB:CC:DD:EE:FF",
+      "mac_c_array": "{0xBC, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}",
       "service_uuid": "0xFEAA (Eddystone) / Frame 0x41",
       "mac_editable": true,
-      "note": "Google identifies the tracker strictly by the 20-byte EID payload. The BLE MAC address is transmitted on-air by the SX1280 and can be customized freely in firmware."
+      "note": "Google identifies the tracker strictly by the 20-byte EID payload. A unique MAC (BC:BB:CC:DD:EE:FF) is used so it doesn't collide on-air with Tracker I."
     },
     "apple": {
-      "supported": false,
-      "note": "Tracker II was never flashed with Apple keys (Google FMDN only)."
+      "supported": true,
+      "key_id": 5361130,
+      "key_name": "TRACKER_II_APPLE",
+      "private_key_b64": "IU66s/rDun4ulC4GUuwlbntPeW1YiAHCsOFquQ==",
+      "public_key_hex": "ebe1973d73aaec6bd204281e89b0938e0f6537ff7382d0843006b431",
+      "mac_address": "EB:E1:97:3D:73:AA",
+      "mac_c_array": "{0xAA, 0x73, 0x3D, 0x97, 0xE1, 0xEB}",
+      "mac_editable": false,
+      "note": "Cryptographically bound: Derived from SECP224R1 public key (mac[5] = pub_x[0] | 0xC0 = 0xEB)."
     }
   }
 }
