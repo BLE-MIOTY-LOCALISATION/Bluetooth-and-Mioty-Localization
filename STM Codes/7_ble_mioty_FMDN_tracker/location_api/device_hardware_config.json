@@ -56,5 +56,31 @@
       "mac_editable": false,
       "note": "Cryptographically bound: Derived from SECP224R1 public key (mac[5] = pub_x[0] | 0xC0 = 0xEB)."
     }
+  },
+  "BLE MIOTY TRACKER III": {
+    "device_name": "BLE MIOTY TRACKER III",
+    "hardware": "STM32F103CB + SX1280 (Dual BLE Google + Apple)",
+    "firmware_source": "STM Codes/12_apple_google_tracker_no_mioty_opt/Core/Src/main.cpp",
+    "google": {
+      "supported": true,
+      "eid_hex": "14DD5386C06970C53B2AC0F6C26A905043B363F5",
+      "eid_c_array": "{0x14, 0xDD, 0x53, 0x86, 0xC0, 0x69, 0x70, 0xC5, 0x3B, 0x2A, 0xC0, 0xF6, 0xC2, 0x6A, 0x90, 0x50, 0x43, 0xB3, 0x63, 0xF5}",
+      "mac_address": "CC:BB:CC:DD:EE:FF",
+      "mac_c_array": "{0xCC, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}",
+      "service_uuid": "0xFEAA (Eddystone) / Frame 0x41",
+      "mac_editable": true,
+      "note": "Google identifies the tracker strictly by the 20-byte EID payload. Unique MAC CC:BB:CC:DD:EE:FF avoids on-air collisions."
+    },
+    "apple": {
+      "supported": true,
+      "key_id": 5361131,
+      "key_name": "TRACKER_III_APPLE",
+      "private_key_b64": "bqSU730lSwg6TdeUXLuGr6EllZwz0mvnStCqVQ==",
+      "public_key_hex": "7221763311e5472fac9c69103af71226a80acecbe767e41c408e413e",
+      "mac_address": "F2:21:76:33:11:E5",
+      "mac_c_array": "{0xE5, 0x11, 0x33, 0x76, 0x21, 0xF2}",
+      "mac_editable": false,
+      "note": "Cryptographically bound: Derived from SECP224R1 public key (mac[5] = pub_x[0] | 0xC0 = 0xF2)."
+    }
   }
 }

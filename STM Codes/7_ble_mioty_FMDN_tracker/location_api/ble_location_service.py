@@ -228,7 +228,7 @@ class BLELocationService:
                 formatted_locations.append(report)
         
         # Merge Apple locations for hardware trackers broadcasting an Apple Find My key
-        if device_name in ("BLE MIOTY TRACKER I", "BLE MIOTY TRACKER II"):
+        if device_name in ("BLE MIOTY TRACKER I", "BLE MIOTY TRACKER II", "BLE MIOTY TRACKER III"):
             apple_reports = self.fetch_apple_locations(device_name)
             formatted_locations.extend(apple_reports)
         
