@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FMDN Tracker Dashboard</title>
+    <meta name="description" content="Industrial IoT Localization Dashboard using Google Find My Device Network and Leaflet.js">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --panel-bg: rgba(22, 24, 33, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-glow: 0 0 12px rgba(0, 242, 254, 0.4);
+            --accent-color-1: #00f2fe;
+            --accent-color-2: #4facfe;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* App Layout */
+        .dashboard-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar Glassmorphic Panel */
+        .sidebar {
+            width: 420px;
+            height: calc(100vh - 40px);
+            margin: 20px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: flex-col;
+            position: absolute;
+            z-index: 1000;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--accent-color-1) 0%, var(--accent-color-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, var(--accent-color-2) 0%, var(--accent-color-1) 100%);
+            border: none;
+            color: #090d16;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--accent-glow);
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        .refresh-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: #090d16;
+        }
+
+        .refreshing svg {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Tracker List */
+        .tracker-list-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 6px 10px 40px 6px; /* Spacing so shadows and borders aren't clipped */
+        }
+
+        /* Custom Scrollbar */
+        .tracker-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .tracker-list-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .tracker-list-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .tracker-list-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* History list scrollbar */
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .history-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: var(--card-accent, rgba(255, 255, 255, 0.25));
+        }
+
+        .tracker-card {
+            flex-shrink: 0; /* Prevent card from shrinking under flex layouts */
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .tracker-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .tracker-card.active-card {
+            border-color: var(--card-accent, var(--accent-color-1)) !important;
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 16px var(--card-accent-glow, rgba(0, 242, 254, 0.15)) !important;
+        }
+
+        .tracker-card.active-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px var(--card-accent-glow, rgba(0, 242, 254, 0.25)) !important;
+        }
+
+        .card-info-btn {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .card-info-btn:hover {
+            background: rgba(0, 242, 254, 0.16);
+            border-color: var(--accent-color-1);
+            color: var(--accent-color-1);
+            transform: scale(1.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-secondary);
+        }
+        .status-dot.active {
+            background-color: var(--success-color);
+            box-shadow: 0 0 8px var(--success-color);
+        }
+
+        .card-id {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        /* Map styling */
+        #map {
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            background-color: #0b0c10;
+        }
+
+        /* Leaflet popups customization */
+        .leaflet-popup-content-wrapper {
+            background: var(--panel-bg) !important;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary) !important;
+            border-radius: 12px !important;
+            padding: 5px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+        .leaflet-popup-tip {
+            background: #161821 !important;
+            border: 1px solid var(--border-color);
+        }
+        .popup-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .popup-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent-color-1);
+        }
+        .popup-field {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .popup-field strong {
+            color: var(--text-primary);
+        }
+        .popup-maps-btn {
+            margin-top: 5px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        .popup-maps-btn:hover {
+            background: var(--accent-color-1);
+            color: #090d16;
+            border-color: var(--accent-color-1);
+        }
+
+        /* Status & Logs section in Sidebar */
+        .status-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        /* Custom pulsing marker */
+        .pulsing-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pulsing-marker-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--accent-color-1);
+            border: 2px solid white;
+            box-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
+            z-index: 2;
+        }
+        .pulsing-marker-ring {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--accent-color-1);
+            border-radius: 50%;
+            animation: pulse 1.8s infinite ease-out;
+            opacity: 0;
+            z-index: 1;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            25% { opacity: 0.6; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        /* Error notification banner */
+        .error-banner {
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--error-color);
+            color: #f87171;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        /* Floating Telemetry Data Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(8, 10, 15, 0.82);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            width: 92%;
+            max-width: 1020px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 242, 254, 0.15);
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.95) translateY(10px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-close-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .modal-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-color);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .modal-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .modal-select option {
+            background: #161821;
+            color: #f8fafc;
+        }
+
+        .modal-table-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: calc(85vh - 160px);
+            padding: 0 24px 20px 24px;
+        }
+
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .modal-table th {
+            position: sticky;
+            top: 0;
+            background: #161821;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 10.5px;
+            z-index: 10;
+        }
+
+        .modal-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+        }
+
+        .modal-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Hardware Details Modal Styles */
+        .hw-modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+            max-height: calc(85vh - 85px);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .hw-section-card {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hw-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+        }
+
+        .hw-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hw-field-label {
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .hw-code-box {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: monospace;
+            font-size: 11.5px;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            word-break: break-all;
+            gap: 8px;
+        }
+
+        .hw-copy-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .hw-copy-btn:hover {
+            background: var(--accent-color-1);
+            color: #090d16;
+            border-color: var(--accent-color-1);
+        }
+
+        .hw-mac-edit-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .hw-mac-input {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12.5px;
+            outline: none;
+            width: 175px;
+            letter-spacing: 1px;
+        }
+
+        .hw-mac-input:focus {
+            border-color: var(--accent-color-1);
+            box-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+        }
+
+        .hw-save-btn {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #10b981;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .hw-save-btn:hover {
+            background: #10b981;
+            color: #090d16;
+        }
+
+        .hw-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #10b981;
+            color: #090d16;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 100000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.25s ease;
+            pointer-events: none;
+        }
+
+        .hw-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Overlay Panel -->
+        <div class="sidebar">
+
+            <div class="header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h1>FMDN Tracker</h1>
+                    <p>Industrial BLE Tags localization dashboard</p>
+                </div>
+                <a href="/" style="text-decoration: none; color: var(--text-secondary); font-size: 13px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); transition: all 0.2s;">
+                    ← Home
+                </a>
+            </div>
+
+            <div class="controls" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span style="font-size: 14px; font-weight: 500; flex-grow: 1;">Registered Devices</span>
+                <button id="viewKeysBtn" class="refresh-btn" onclick="openHardwareInfoModal(event)" style="text-decoration: none; background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); color: var(--text-primary); box-shadow: none; padding: 8px 12px; font-size: 13px;" title="View Tag Keys, Flashed EIDs & MAC Addresses">
+                    <svg viewBox="0 0 24 24" style="fill: currentColor; width: 14px; height: 14px;">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                    Tag Keys
+                </button>
+                <button id="viewDataBtn" class="refresh-btn" onclick="openDataModal()" style="text-decoration: none; background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); color: var(--text-primary); box-shadow: none; padding: 8px 12px; font-size: 13px;" title="View all telemetry points in a floating table">
+                    <svg viewBox="0 0 24 24" style="fill: currentColor; width: 14px; height: 14px;">
+                        <path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm0 4v3h4V7H4zm6 0v3h10V7H10zm10 5H10v3h10v-3zm-12 0H4v3h4v-3zm0 5H4v2h4v-2zm2 2h10v-2H10v2z"/>
+                    </svg>
+                    Data View
+                </button>
+                <a href="/api/ble/export/csv" download id="exportCsvBtn" class="refresh-btn" style="text-decoration: none; background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); color: var(--text-primary); box-shadow: none; padding: 8px 12px; font-size: 13px;" title="Export all telemetry to CSV">
+                    <svg viewBox="0 0 24 24" style="fill: currentColor; width: 14px; height: 14px;">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
+                    CSV
+                </a>
+                <button id="refreshBtn" class="refresh-btn" onclick="fetchDeviceLocations(true)" style="padding: 8px 14px; font-size: 13px;">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 12a7 7 0 0 1-7 7c-3.86 0-7-3.14-7-7s3.14-7 7-7c1.9 0 3.63.76 4.9 2H14v2h6V4h-2v2.3C16.48 4.9 14.34 4 12 4 7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8h-2z"/>
+                    </svg>
+                    <span id="refreshBtnText">Refresh</span>
+                </button>
+            </div>
+
+            <!-- Network Legend -->
+            <div style="display: flex; gap: 10px; margin-bottom: 12px; padding: 6px 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 10px; font-size: 11px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; display: inline-block;"></span>
+                    <span style="color: var(--text-secondary);">Google Find My</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #0a84ff; box-shadow: 0 0 6px #0a84ff; display: inline-block;"></span>
+                    <span style="color: var(--text-secondary);">Apple Find My</span>
+                </div>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="errorBanner" class="error-banner"></div>
+
+            <!-- List container -->
+            <div id="trackerList" class="tracker-list-container">
+                <!-- Cards injected here -->
+            </div>
+
+            <!-- Status Footer -->
+            <div class="status-footer">
+                <div class="status-badge">
+                    <span id="networkStatusDot" class="status-dot active"></span>
+                    <span>System Status: <strong style="color: var(--success-color)">Online</strong></span>
+                </div>
+                <div id="lastCheckedTime">Last checked: Never</div>
+            </div>
+        </div>
+
+        <!-- Fullscreen Leaflet Map -->
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet.js script -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+        let map;
+        let selectedDeviceName = null;
+        let isSyncing = false;
+        let deviceCache = [];
+        let activeLayers = []; // Stores currently plotted Map layers for the selected device
+
+        // Consistent DOM ID helper for tracker cards
+        function getCardId(deviceName) {
+            return 'card-' + (deviceName || 'unknown').replace(/[^a-zA-Z0-9_-]/g, '_');
+        }
+
+        // Color coding themes for different devices
+        const DEVICE_COLORS = [
+            { primary: '#00f2fe', secondary: '#4facfe', glow: 'rgba(0, 242, 254, 0.35)' }, // Neon Cyan
+            { primary: '#10b981', secondary: '#059669', glow: 'rgba(16, 185, 129, 0.35)' }, // Emerald Green
+            { primary: '#f59e0b', secondary: '#d97706', glow: 'rgba(245, 158, 11, 0.35)' }, // Amber Gold
+            { primary: '#ff4e50', secondary: '#f9d423', glow: 'rgba(255, 78, 80, 0.35)' },  // Coral Red
+            { primary: '#d946ef', secondary: '#c084fc', glow: 'rgba(217, 70, 239, 0.35)' }  // Magenta Violet
+        ];
+
+        // Resolves a consistent color schema for each device (fallback)
+        function getDeviceColor(index) {
+            const colorIndex = index % DEVICE_COLORS.length;
+            return DEVICE_COLORS[colorIndex];
+        }
+
+        function getSourceColor(source) {
+            if (source === 'apple') {
+                return { primary: '#0a84ff', secondary: '#0040dd', glow: 'rgba(10, 132, 255, 0.35)' }; // Blue
+            }
+            // Google / Default
+            return { primary: '#10b981', secondary: '#059669', glow: 'rgba(16, 185, 129, 0.35)' }; // Emerald Green
+        }
+
+        // Initialize Leaflet Map
+        function initMap() {
+            // Default center coordinates (Nuremberg/Erlangen region, Germany matching sample response)
+            const defaultCenter = [49.5980, 11.0018];
+            map = L.map('map', {
+                zoomControl: false // Hide default zoom buttons to keep UI clean
+            }).setView(defaultCenter, 13);
+
+            // Add clean dark mode tiles
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 20
+            }).addTo(map);
+
+            // Re-position zoom buttons to bottom right corner
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(map);
+        }
+
+        // Creates a dynamic custom pulsing neon icon matching the device theme color
+        function createPulsingIcon(colorObj) {
+            return L.divIcon({
+                className: 'pulsing-marker',
+                html: `
+                    <div class="pulsing-marker-dot" style="background-color: ${colorObj.primary}; box-shadow: 0 0 10px ${colorObj.primary};"></div>
+                    <div class="pulsing-marker-ring" style="border-color: ${colorObj.primary};"></div>
+                `,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+        }
+
+        // Clears all layers currently plotted on the map
+        function clearMap() {
+            activeLayers.forEach(layer => map.removeLayer(layer));
+            activeLayers = [];
+        }
+
+        // Injects loading state into the Refresh button itself (NO screen blur)
+        function setLoader(active) {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const refreshBtnText = document.getElementById('refreshBtnText');
+            if (active) {
+                if (refreshBtn) {
+                    refreshBtn.classList.add('refreshing');
+                    refreshBtn.disabled = true;
+                }
+                if (refreshBtnText) refreshBtnText.innerText = 'Syncing...';
+            } else {
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('refreshing');
+                    refreshBtn.disabled = false;
+                }
+                if (refreshBtnText) refreshBtnText.innerText = 'Refresh';
+            }
+        }
+
+        // Show error details
+        function showError(message) {
+            const banner = document.getElementById('errorBanner');
+            if (message) {
+                banner.innerText = message;
+                banner.style.display = 'block';
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+
+        // Formats timestamps
+        function formatRelativeTime(epochSeconds) {
+            if (!epochSeconds) return 'Unknown';
+            const diffMs = Date.now() - (epochSeconds * 1000);
+            const diffMin = Math.round(diffMs / 60000);
+            
+            if (diffMin < 1) return 'Just now';
+            if (diffMin === 1) return '1 minute ago';
+            if (diffMin < 60) return `${diffMin} minutes ago`;
+            
+            const hours = Math.floor(diffMin / 60);
+            if (hours === 1) return '1 hour ago';
+            if (hours < 24) return `${hours} hours ago`;
+            
+            return new Date(epochSeconds * 1000).toLocaleString();
+        }
+
+        // Fetches devices list and then gathers location telemetry for each
+        async function fetchDeviceLocations(forceRefresh = false) {
+            if (isSyncing) return;
+            isSyncing = true;
+            setLoader(true);
+            showError(null);
+            
+            try {
+                // Step 1: Query API server for registered devices list
+                const devicesUrl = forceRefresh ? '/api/ble/devices?refresh=true' : '/api/ble/devices';
+                const devResponse = await fetch(devicesUrl);
+                const devData = await devResponse.json();
+                
+                if (devData.status !== 'success') {
+                    throw new Error(devData.message || 'Failed to retrieve devices list.');
+                }
+                
+                const devices = devData.devices;
+                const trackerList = document.getElementById('trackerList');
+                const updatedDeviceCache = [];
+                
+                // Step 2: Fetch details for each tracker sequentially
+                for (let i = 0; i < devices.length; i++) {
+                    const deviceName = devices[i];
+                    const colorObj = getDeviceColor(i);
+                    try {
+                        const locResponse = await fetch(`/api/ble/location/${encodeURIComponent(deviceName)}?history=true`);
+                        const locData = await locResponse.json();
+                        
+                        if (!locResponse.ok || locData.status === 'error') {
+                            throw new Error(locData.message || 'Unknown API error');
+                        }
+                        
+                        updatedDeviceCache.push({ data: locData, color: colorObj });
+                        createTrackerCard(locData, colorObj);
+                    } catch (deviceError) {
+                        console.error(`Error querying location for device ${deviceName}:`, deviceError);
+                        // If we already have a previous record in cache, preserve it so transient timeouts don't blank it
+                        const prevRecord = deviceCache.find(item => item.data.device_name === deviceName);
+                        if (prevRecord) {
+                            updatedDeviceCache.push(prevRecord);
+                            createTrackerCard(prevRecord.data, colorObj);
+                        } else {
+                            const errorData = {
+                                device_name: deviceName,
+                                status: 'FMDN Query Timeout/Offline',
+                                canonic_id: 'N/A'
+                            };
+                            updatedDeviceCache.push({ data: errorData, color: colorObj });
+                            createTrackerCard(errorData, colorObj);
+                        }
+                    }
+                }
+
+                // Clean up any cards for devices that are no longer in the registered devices list
+                const validCardIds = updatedDeviceCache.map(item => getCardId(item.data.device_name));
+                const existingCards = trackerList.querySelectorAll('.tracker-card');
+                existingCards.forEach(c => {
+                    if (!validCardIds.includes(c.id)) {
+                        c.remove();
+                    }
+                });
+
+                // Update deviceCache atomically
+                deviceCache = updatedDeviceCache;
+
+                // Restore active device map rendering, or default to the first one in the list on initial load
+                if (deviceCache.length > 0) {
+                    let activeRecord = deviceCache.find(item => item.data.device_name === selectedDeviceName);
+                    if (!activeRecord) {
+                        // Default to first device on initial load
+                        activeRecord = deviceCache[0];
+                        selectDevice(activeRecord.data, activeRecord.color, true);
+                    } else {
+                        // Refresh: update map markers without jarring camera jump
+                        selectDevice(activeRecord.data, activeRecord.color, false);
+                    }
+                }
+
+                // Update checked time
+                document.getElementById('lastCheckedTime').innerText = `Last checked: ${new Date().toLocaleTimeString()}`;
+
+                // Update modal if currently open
+                const modal = document.getElementById('dataModal');
+                if (modal && modal.classList.contains('open')) {
+                    renderModalTable();
+                }
+
+            } catch (err) {
+                console.error(err);
+                showError(`Error connecting to Flask backend: ${err.message}`);
+                document.getElementById('networkStatusDot').className = 'status-dot';
+            } finally {
+                isSyncing = false;
+                setLoader(false);
+            }
+        }
+
+        // Activates a tracker card and displays its tracking path on the map
+        function selectDevice(data, colorObj, centerMap = true) {
+            highlightCard(data.device_name, colorObj);
+            
+            const isGeo = (data.history && data.history.length > 0 && data.history.some(p => p.type === 'geo'));
+            if (isGeo) {
+                const geoPoints = data.history.filter(p => p.type === 'geo');
+                const latest = geoPoints[0];
+                
+                // Plot this device's telemetry specifically
+                plotDeviceHistoryOnMap(data, colorObj);
+                
+                // Center the map smoothly on the latest coordinate
+                if (centerMap) {
+                    map.flyTo([latest.latitude, latest.longitude], 17, {
+                        animate: true,
+                        duration: 1.2
+                    });
+                }
+            } else {
+                clearMap();
+            }
+        }
+
+        // Creates a card in the sidebar panel (updates in place if already existing)
+        function createTrackerCard(data, colorObj) {
+            const container = document.getElementById('trackerList');
+            const card = document.createElement('div');
+            
+            const isGeo = (data.history && data.history.length > 0 && data.history.some(p => p.type === 'geo'));
+            const statusDotClass = isGeo ? 'status-dot active' : 'status-dot';
+            
+            let ageString = 'N/A';
+            let accuracyVal = 'N/A';
+            let statusVal = 'Offline';
+            let absoluteTimeString = '';
+            let historyCount = 0;
+            let geoPoints = [];
+            let applePoints = [];
+            let googlePoints = [];
+
+            if (isGeo) {
+                geoPoints = data.history.filter(p => p.type === 'geo');
+                applePoints = geoPoints.filter(p => p.source === 'apple');
+                googlePoints = geoPoints.filter(p => p.source === 'google');
+                const latestPoint = geoPoints[0];
+                ageString = formatRelativeTime(latestPoint.timestamp);
+                accuracyVal = `${Math.round(latestPoint.accuracy_meters)}m`;
+                statusVal = latestPoint.status || 'Active';
+                absoluteTimeString = new Date(latestPoint.timestamp * 1000).toLocaleString();
+                historyCount = geoPoints.length;
+            }
+
+            let historyHtml = '';
+            if (isGeo && geoPoints.length > 1) {
+                historyHtml = `
+                    <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); width: 100%; grid-column: span 2;">
+                        <span class="detail-label" style="display: block; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: ${colorObj.primary};">Location History</span>
+                        <div class="history-list" style="display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto; padding-right: 4px;">
+                            ${geoPoints.map((pt, idx) => {
+                                const isApple = pt.source === 'apple';
+                                const srcColor = isApple ? '#0a84ff' : '#10b981';
+                                const badgeBg = isApple ? 'rgba(10, 132, 255, 0.15)' : 'rgba(16, 185, 129, 0.15)';
+                                const networkLabel = isApple ? 'Apple' : 'Google';
+                                return `
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; background: rgba(255,255,255,0.02); padding: 6px 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04); transition: all 0.2s ease;">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span style="background: ${badgeBg}; color: ${srcColor}; border: 1px solid ${srcColor}; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; text-transform: uppercase;">${networkLabel}</span>
+                                        <span style="color: var(--text-primary); font-family: monospace; font-size: 10.5px;">
+                                            ${pt.latitude.toFixed(5)}, ${pt.longitude.toFixed(5)}
+                                        </span>
+                                    </div>
+                                    <span style="color: var(--text-secondary); font-size: 10px;">
+                                        ${new Date(pt.timestamp * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}
+                                    </span>
+                                </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const cardId = getCardId(data.device_name);
+            card.className = `tracker-card ${selectedDeviceName === data.device_name ? 'active-card' : ''}`;
+            card.id = cardId;
+
+            // Apply card CSS variables for custom glow theme
+            card.style.setProperty('--card-accent', colorObj.primary);
+            card.style.setProperty('--card-accent-glow', colorObj.glow);
+
+            // Calculate network percentages
+            let networkBreakdownHtml = '';
+            if (isGeo && historyCount > 0) {
+                const applePct = Math.round((applePoints.length / historyCount) * 100);
+                const googlePct = 100 - applePct; // ensure 100% sum
+                networkBreakdownHtml = `
+                    <div class="detail-item" style="grid-column: span 2; margin-top: 2px;">
+                        <span class="detail-label" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Source Distribution</span>
+                            <span style="font-size: 10px; color: var(--text-secondary); text-transform: none;">${historyCount} fixes</span>
+                        </span>
+                        <div style="margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                                <span style="color: #0a84ff; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #0a84ff; display: inline-block;"></span>
+                                    Apple Network: ${applePct}% <span style="font-weight: normal; color: var(--text-secondary); font-size: 10px;">(${applePoints.length})</span>
+                                </span>
+                                <span style="color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                                    Google Network: ${googlePct}% <span style="font-weight: normal; color: var(--text-secondary); font-size: 10px;">(${googlePoints.length})</span>
+                                </span>
+                            </div>
+                            <div style="height: 5px; width: 100%; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; display: flex;">
+                                <div style="width: ${applePct}%; background: #0a84ff;"></div>
+                                <div style="width: ${googlePct}%; background: #10b981;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                networkBreakdownHtml = `
+                    <div class="detail-item" style="grid-column: span 2;">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" style="color: var(--text-secondary);">${statusVal}</span>
+                    </div>
+                `;
+            }
+
+            // Dual-network or active badges in header
+            let headerBadgesHtml = '';
+            if (isGeo) {
+                const badges = [];
+                if (applePoints.length > 0) {
+                    badges.push(`<span style="font-size: 9px; background: rgba(10,132,255,0.15); border: 1px solid #0a84ff; color: #0a84ff; padding: 1px 5px; border-radius: 4px; font-weight: 700;">APPLE</span>`);
+                }
+                if (googlePoints.length > 0) {
+                    badges.push(`<span style="font-size: 9px; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #10b981; padding: 1px 5px; border-radius: 4px; font-weight: 700;">GOOGLE</span>`);
+                }
+                headerBadgesHtml = `
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        ${badges.join('')}
+                        <span style="font-size: 10px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 1px 6px; border-radius: 10px; font-weight: 500;">${historyCount} pts</span>
+                    </div>
+                `;
+            }
+
+            const escapedDevName = data.device_name.replace(/'/g, "\\'");
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <span class="${statusDotClass}" style="background-color: ${isGeo ? colorObj.primary : 'rgba(255,255,255,0.2)'}; box-shadow: ${isGeo ? `0 0 6px ${colorObj.primary}` : 'none'};"></span>
+                        <span class="card-title">${data.device_name}</span>
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        ${headerBadgesHtml}
+                        <button class="card-info-btn" onclick="openHardwareInfoModal(event, '${escapedDevName}')" title="Hardware Keys, MAC & Payload Specs">
+                            <svg viewBox="0 0 24 24" style="width: 13px; height: 13px; fill: currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-id">Canonic ID: ${data.canonic_id}</div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Last Seen</span>
+                        <span class="detail-value">${ageString} ${absoluteTimeString ? `<span style="font-size: 10.5px; color: var(--text-secondary); font-weight: normal; display: block; margin-top: 2px;">(${absoluteTimeString})</span>` : ''}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Position Accuracy</span>
+                        <span class="detail-value">${accuracyVal}</span>
+                    </div>
+                    ${networkBreakdownHtml}
+                    ${historyHtml}
+                </div>
+            `;
+
+            // Card click listener
+            card.onclick = () => {
+                selectDevice(data, colorObj, true);
+            };
+
+            // Seamless in-place update: replace existing card if already in DOM, else append
+            const existingCard = document.getElementById(card.id);
+            if (existingCard) {
+                existingCard.replaceWith(card);
+            } else {
+                container.appendChild(card);
+            }
+        }
+
+        // Plots the latest position, historical trail and older markers for the selected device
+        function plotDeviceHistoryOnMap(data, colorObj) {
+            clearMap();
+
+            const history = data.history || [];
+            const geoPoints = history.filter(p => p.type === 'geo');
+            
+            if (geoPoints.length === 0) return;
+
+            // 1. Latest report details
+            const latest = geoPoints[0];
+            const latestLatLng = [latest.latitude, latest.longitude];
+            const latestSourceColor = getSourceColor(latest.source);
+
+            // 2. Draw accuracy overlay circle for latest position
+            const accuracyCircle = L.circle(latestLatLng, {
+                radius: latest.accuracy_meters,
+                color: latestSourceColor.primary,
+                weight: 1.5,
+                fillColor: latestSourceColor.primary,
+                fillOpacity: 0.08
+            }).addTo(map);
+            activeLayers.push(accuracyCircle);
+
+            // 3. Draw historical trail connecting positions chronologically (reversed order)
+            // We draw segments between points to color them by source
+            for (let i = 0; i < geoPoints.length - 1; i++) {
+                const ptA = geoPoints[i]; // newer
+                const ptB = geoPoints[i+1]; // older
+                const pColor = getSourceColor(ptA.source).primary;
+                const segment = L.polyline([
+                    [ptA.latitude, ptA.longitude],
+                    [ptB.latitude, ptB.longitude]
+                ], {
+                    color: pColor,
+                    weight: 3,
+                    opacity: 0.7,
+                    dashArray: '5, 8',
+                    lineJoin: 'round'
+                }).addTo(map);
+                activeLayers.push(segment);
+            }
+
+            // 4. Draw smaller markers for older locations (colored by source)
+            for (let i = 1; i < geoPoints.length; i++) {
+                const pt = geoPoints[i];
+                const ptLatLng = [pt.latitude, pt.longitude];
+                const ptColorObj = getSourceColor(pt.source);
+                const isApple = pt.source === 'apple';
+                const netLabel = isApple ? 'Apple Find My' : 'Google Find My';
+                
+                const histPopupContent = `
+                    <div class="popup-info">
+                        <div class="popup-title" style="color: ${ptColorObj.primary};">${data.device_name} (Historical)</div>
+                        <div class="popup-field"><strong>Network</strong>: <span style="color: ${ptColorObj.primary}; font-weight: 600;">${netLabel}</span></div>
+                        <div class="popup-field"><strong>Status</strong>: ${pt.status}</div>
+                        <div class="popup-field"><strong>Seen</strong>: ${new Date(pt.timestamp * 1000).toLocaleString()}</div>
+                        <div class="popup-field"><strong>Accuracy</strong>: ${Math.round(pt.accuracy_meters)} meters</div>
+                        <div class="popup-field"><strong>Coordinates</strong>: ${pt.latitude.toFixed(6)}, ${pt.longitude.toFixed(6)}</div>
+                    </div>
+                `;
+
+                const histMarker = L.circleMarker(ptLatLng, {
+                    radius: 7,
+                    fillColor: ptColorObj.primary,
+                    color: '#ffffff',
+                    weight: 2,
+                    fillOpacity: 0.9
+                })
+                .bindPopup(histPopupContent)
+                .addTo(map);
+                activeLayers.push(histMarker);
+            }
+
+            // 5. Draw main pulsing marker on latest coordinates (colored by network source)
+            const isLatestApple = latest.source === 'apple';
+            const latestNetLabel = isLatestApple ? 'Apple Find My' : 'Google Find My';
+            const mainPopupContent = `
+                <div class="popup-info">
+                    <div class="popup-title" style="color: ${latestSourceColor.primary};">${data.device_name} (Latest Fix)</div>
+                    <div class="popup-field"><strong>Network</strong>: <span style="color: ${latestSourceColor.primary}; font-weight: 700;">${latestNetLabel}</span></div>
+                    <div class="popup-field"><strong>Status</strong>: ${latest.status}</div>
+                    <div class="popup-field"><strong>Last Seen</strong>: ${new Date(latest.timestamp * 1000).toLocaleString()}</div>
+                    <div class="popup-field"><strong>Accuracy</strong>: ${Math.round(latest.accuracy_meters)} meters</div>
+                    <div class="popup-field"><strong>Coordinates</strong>: ${latest.latitude.toFixed(6)}, ${latest.longitude.toFixed(6)}</div>
+                    <a href="${latest.google_maps_link}" target="_blank" class="popup-maps-btn" style="background-color: ${latestSourceColor.primary}; border-color: ${latestSourceColor.primary}; color: #090d16;">Open in Google Maps</a>
+                </div>
+            `;
+
+            const mainMarker = L.marker(latestLatLng, {
+                icon: createPulsingIcon(latestSourceColor)
+            })
+            .bindPopup(mainPopupContent)
+            .addTo(map);
+            activeLayers.push(mainMarker);
+
+            mainMarker.on('popupopen', () => {
+                highlightCard(data.device_name, colorObj);
+            });
+        }
+
+        // Highlights card in sidebar
+        function highlightCard(deviceName, colorObj) {
+            selectedDeviceName = deviceName;
+            
+            // Remove active classes
+            document.querySelectorAll('.tracker-card').forEach(el => {
+                el.classList.remove('active-card');
+            });
+            
+            // Add active class to selected card
+            const selectedCard = document.getElementById(getCardId(deviceName));
+            if (selectedCard) {
+                selectedCard.classList.add('active-card');
+                if (colorObj) {
+                    selectedCard.style.setProperty('--card-accent', colorObj.primary);
+                    selectedCard.style.setProperty('--card-accent-glow', colorObj.glow);
+                }
+                selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // --- Floating Telemetry Data Modal Logic ---
+        function openDataModal() {
+            const modal = document.getElementById('dataModal');
+            if (!modal) return;
+            populateDeviceFilterOptions();
+            renderModalTable();
+            modal.classList.add('open');
+        }
+
+        function closeDataModal() {
+            const modal = document.getElementById('dataModal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        function handleModalBackdropClick(event) {
+            if (event.target.id === 'dataModal') {
+                closeDataModal();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDataModal();
+                closeHardwareModal();
+            }
+        });
+
+        function populateDeviceFilterOptions() {
+            const select = document.getElementById('modalDeviceFilter');
+            if (!select) return;
+            const currentVal = select.value;
+            select.innerHTML = '<option value="all">All Devices</option>';
+            deviceCache.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.data.device_name;
+                opt.textContent = item.data.device_name;
+                select.appendChild(opt);
+            });
+            select.value = currentVal || 'all';
+        }
+
+        function renderModalTable() {
+            const tbody = document.getElementById('modalTableBody');
+            const sourceFilter = document.getElementById('modalSourceFilter').value;
+            const deviceFilter = document.getElementById('modalDeviceFilter').value;
+            const summaryEl = document.getElementById('modalSummaryCount');
+            
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            let allRows = [];
+            deviceCache.forEach(item => {
+                const devName = item.data.device_name;
+                const canonicId = item.data.canonic_id;
+                const history = item.data.history || [];
+                history.forEach(pt => {
+                    if (pt.type === 'geo') {
+                        allRows.push({
+                            deviceName: devName,
+                            canonicId: canonicId,
+                            source: pt.source,
+                            latitude: pt.latitude,
+                            longitude: pt.longitude,
+                            timestamp: pt.timestamp,
+                            timestampReadable: pt.timestamp_readable || new Date(pt.timestamp * 1000).toLocaleString(),
+                            accuracy: pt.accuracy_meters,
+                            status: pt.status,
+                            mapLink: pt.google_maps_link
+                        });
+                    }
+                });
+            });
+
+            // Sort newest first
+            allRows.sort((a, b) => b.timestamp - a.timestamp);
+
+            // Filter
+            let filtered = allRows.filter(r => {
+                if (sourceFilter !== 'all' && r.source !== sourceFilter) return false;
+                if (deviceFilter !== 'all' && r.deviceName !== deviceFilter) return false;
+                return true;
+            });
+
+            const appleCount = filtered.filter(r => r.source === 'apple').length;
+            const googleCount = filtered.filter(r => r.source === 'google').length;
+            if (summaryEl) {
+                summaryEl.innerHTML = `Showing <strong>${filtered.length}</strong> records (<span style="color:#0a84ff; font-weight: 600;">${appleCount} Apple</span>, <span style="color:#10b981; font-weight: 600;">${googleCount} Google</span>)`;
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 30px;">No telemetry records found matching selected filter.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((r, idx) => {
+                const tr = document.createElement('tr');
+                const isApple = r.source === 'apple';
+                const netColor = isApple ? '#0a84ff' : '#10b981';
+                const badgeBg = isApple ? 'rgba(10, 132, 255, 0.15)' : 'rgba(16, 185, 129, 0.15)';
+
+                tr.innerHTML = `
+                    <td style="color: var(--text-secondary); font-family: monospace;">${idx + 1}</td>
+                    <td style="font-weight: 500;">${r.deviceName}</td>
+                    <td>
+                        <span style="background: ${badgeBg}; color: ${netColor}; border: 1px solid ${netColor}; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; text-transform: uppercase;">
+                            ${isApple ? 'Apple' : 'Google'}
+                        </span>
+                    </td>
+                    <td style="font-family: monospace; font-size: 12px; color: var(--text-primary);">
+                        ${r.latitude.toFixed(6)}, ${r.longitude.toFixed(6)}
+                    </td>
+                    <td style="color: var(--text-secondary); font-size: 11px;">${r.timestampReadable}</td>
+                    <td>${Math.round(r.accuracy)}m</td>
+                    <td style="color: var(--text-secondary); font-size: 11px;">${r.status}</td>
+                    <td>
+                        <button onclick="locatePointFromModal('${r.deviceName.replace(/'/g, "\\'")}', ${r.latitude}, ${r.longitude})" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--accent-color-1); padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <svg viewBox="0 0 24 24" style="width: 12px; height: 12px; fill: currentColor;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            Locate
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function locatePointFromModal(deviceName, lat, lon) {
+            closeDataModal();
+            const record = deviceCache.find(item => item.data.device_name === deviceName);
+            if (record) {
+                selectDevice(record.data, record.color, false);
+            }
+            map.flyTo([lat, lon], 18, { animate: true, duration: 1 });
+        }
+
+        // --- Hardware & Payload Info Modal Logic ---
+        const DEFAULT_HARDWARE_INFO = {
+            "BLE MIOTY TRACKER I": {
+                "device_name": "BLE MIOTY TRACKER I",
+                "hardware": "STM32F103CB + SX1280 (Dual BLE + Mioty)",
+                "firmware_source": "STM Codes/10_apple_google_mioty_tracker/Core/Src/main.cpp",
+                "google": {
+                    "supported": true,
+                    "eid_hex": "7D355EC1951FB3C1CB379F3BED0E8D1385514BD7",
+                    "eid_c_array": "{0x7D, 0x35, 0x5E, 0xC1, 0x95, 0x1F, 0xB3, 0xC1, 0xCB, 0x37, 0x9F, 0x3B, 0xED, 0x0E, 0x8D, 0x13, 0x85, 0x51, 0x4B, 0xD7}",
+                    "mac_address": "AC:BB:CC:DD:EE:FF",
+                    "mac_c_array": "{0xAC, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}",
+                    "service_uuid": "0xFEAA (Eddystone) / Frame 0x41",
+                    "mac_editable": true,
+                    "note": "Google identifies the tracker strictly by the 20-byte EID payload. The BLE MAC address is transmitted on-air by the SX1280 and can be customized freely in firmware."
+                },
+                "apple": {
+                    "supported": true,
+                    "key_id": 5361129,
+                    "key_name": "H7X84B",
+                    "private_key_b64": "yBPO7ho0j+BXdGmiRge+NtcY0Vw3hlXsU67SIw==",
+                    "public_key_hex": "9c84b8ba01344cfb2477ca5fa5348af189fa9b148ed2ca4bd0135e6a",
+                    "mac_address": "DC:84:B8:BA:01:34",
+                    "mac_c_array": "{0x34, 0x01, 0xBA, 0xB8, 0x84, 0xDC}",
+                    "mac_editable": false,
+                    "note": "Cryptographically bound: Apple Offline Finding encodes the first 6 bytes of the SECP224R1 public key directly into the BLE MAC (mac[5] = pub_key[0] | 0xC0). Changing the MAC requires generating a new key pair."
+                },
+                "mioty": {
+                    "supported": true,
+                    "eui64": "70:B3:D5:67:70:FF:01:70",
+                    "network_key": "53ADF802B197F2738D5DDDA577E1FA9C",
+                    "profile": "EU1 Lambda80 (2.4 GHz)"
+                }
+            },
+            "BLE MIOTY TRACKER II": {
+                "device_name": "BLE MIOTY TRACKER II",
+                "hardware": "STM32F103CB + SX1280 (Google FMDN only)",
+                "firmware_source": "STM Codes/11_apple_google_tracker_no_mioty/Core/Src/main.cpp",
+                "google": {
+                    "supported": true,
+                    "eid_hex": "0C981DBBF5DDE01E6E04F10668DBF3F68ABC2FCF",
+                    "eid_c_array": "{0x0C, 0x98, 0x1D, 0xBB, 0xF5, 0xDD, 0xE0, 0x1E, 0x6E, 0x04, 0xF1, 0x06, 0x68, 0xDB, 0xF3, 0xF6, 0x8A, 0xBC, 0x2F, 0xCF}",
+                    "mac_address": "AC:BB:CC:DD:EE:FF",
+                    "mac_c_array": "{0xAC, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF}",
+                    "service_uuid": "0xFEAA (Eddystone) / Frame 0x41",
+                    "mac_editable": true,
+                    "note": "Google identifies the tracker strictly by the 20-byte EID payload. The BLE MAC address is transmitted on-air by the SX1280 and can be customized freely in firmware."
+                },
+                "apple": {
+                    "supported": false,
+                    "note": "Tracker II was never flashed with Apple keys (Google FMDN only)."
+                }
+            }
+        };
+
+        let hardwareInfoCache = JSON.parse(JSON.stringify(DEFAULT_HARDWARE_INFO));
+        let currentHwModalDevice = "BLE MIOTY TRACKER I";
+
+        async function loadHardwareInfo() {
+            try {
+                const res = await fetch('/api/ble/hardware-info');
+                const data = await res.json();
+                if (data.status === 'success' && data.devices && Object.keys(data.devices).length > 0) {
+                    hardwareInfoCache = Object.assign({}, DEFAULT_HARDWARE_INFO, data.devices);
+                }
+            } catch (e) {
+                console.warn('Using local hardware info fallback:', e);
+            }
+        }
+
+        function openHardwareInfoModal(event, deviceName) {
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+            if (deviceName) {
+                currentHwModalDevice = deviceName;
+            } else if (!currentHwModalDevice) {
+                currentHwModalDevice = (deviceCache.length > 0 ? deviceCache[0].data.device_name : 'BLE MIOTY TRACKER I');
+            }
+            populateHwDeviceSelect();
+            renderHardwareModal(currentHwModalDevice);
+            const modal = document.getElementById('hardwareModal');
+            if (modal) {
+                modal.classList.add('open');
+            }
+            // Background sync latest from server if available
+            loadHardwareInfo().then(() => {
+                if (modal && modal.classList.contains('open')) {
+                    populateHwDeviceSelect();
+                    renderHardwareModal(currentHwModalDevice);
+                }
+            });
+        }
+
+        function closeHardwareModal() {
+            const modal = document.getElementById('hardwareModal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        function handleHwModalBackdropClick(event) {
+            if (event.target.id === 'hardwareModal') {
+                closeHardwareModal();
+            }
+        }
+
+        function populateHwDeviceSelect() {
+            const select = document.getElementById('hwDeviceSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            const devices = hardwareInfoCache ? Object.keys(hardwareInfoCache) : (deviceCache.map(d => d.data.device_name));
+            devices.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                select.appendChild(opt);
+            });
+            select.value = currentHwModalDevice;
+        }
+
+        function onHwDeviceSelectChange() {
+            const select = document.getElementById('hwDeviceSelect');
+            if (select) {
+                currentHwModalDevice = select.value;
+                renderHardwareModal(currentHwModalDevice);
+            }
+        }
+
+        function renderHardwareModal(deviceName) {
+            const container = document.getElementById('hwModalContent');
+            if (!container) return;
+            
+            const info = hardwareInfoCache ? hardwareInfoCache[deviceName] : null;
+            if (!info) {
+                container.innerHTML = `<div style="padding: 24px; text-align: center; color: var(--text-secondary);">No hardware configuration found for ${deviceName}.</div>`;
+                return;
+            }
+
+            const g = info.google || {};
+            const a = info.apple || {};
+            const m = info.mioty || {};
+
+            let appleHtml = '';
+            if (a.supported) {
+                appleHtml = `
+                    <div class="hw-section-card" style="border-left: 3px solid #0a84ff;">
+                        <div class="hw-section-header">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="width: 10px; height: 10px; border-radius: 50%; background: #0a84ff; display: inline-block;"></span>
+                                <span style="font-weight: 700; color: #0a84ff; font-size: 13px;">APPLE FIND MY (Offline Finding Payload)</span>
+                            </div>
+                            <span style="font-size: 10px; background: rgba(10, 132, 255, 0.15); border: 1px solid #0a84ff; color: #0a84ff; padding: 2px 7px; border-radius: 4px; font-weight: 700;">KEY ID: ${a.key_id || 'N/A'}</span>
+                        </div>
+
+                        <div class="hw-field">
+                            <div class="hw-field-label">Advertising BLE MAC Address (Cryptographically Bound)</div>
+                            <div class="hw-code-box">
+                                <span style="font-weight: 700; color: #0a84ff;">${a.mac_address}</span>
+                                <span style="font-size: 11px; color: var(--text-secondary); font-family: monospace;">LSB on-air: ${a.mac_c_array}</span>
+                                <button class="hw-copy-btn" onclick="copyToClipboard('${a.mac_c_array}', this)">Copy Array</button>
+                            </div>
+                            <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+                                <strong style="color: #0a84ff;">Fixed Rule:</strong> ${a.note}
+                            </div>
+                        </div>
+
+                        <div class="hw-field">
+                            <div class="hw-field-label">SECP224R1 Public Key X-Coordinate (28 Bytes Hex)</div>
+                            <div class="hw-code-box">
+                                <span style="font-size: 11px;">${a.public_key_hex}</span>
+                                <button class="hw-copy-btn" onclick="copyToClipboard('${a.public_key_hex}', this)">Copy</button>
+                            </div>
+                        </div>
+
+                        <div class="hw-field">
+                            <div class="hw-field-label">Private Key (Base64)</div>
+                            <div class="hw-code-box">
+                                <span style="font-size: 11px; color: #cbd5e1;">${a.private_key_b64}</span>
+                                <button class="hw-copy-btn" onclick="copyToClipboard('${a.private_key_b64}', this)">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                appleHtml = `
+                    <div class="hw-section-card" style="opacity: 0.7;">
+                        <div class="hw-section-header">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="width: 10px; height: 10px; border-radius: 50%; background: #64748b; display: inline-block;"></span>
+                                <span style="font-weight: 600; color: var(--text-secondary); font-size: 13px;">APPLE FIND MY</span>
+                            </div>
+                            <span style="font-size: 10px; color: var(--text-secondary);">NOT FLASHED</span>
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">${a.note || 'This device was not flashed with an Apple Find My key.'}</div>
+                    </div>
+                `;
+            }
+
+            let miotyHtml = '';
+            if (m.supported) {
+                miotyHtml = `
+                    <div class="hw-section-card" style="border-left: 3px solid #f59e0b;">
+                        <div class="hw-section-header">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+                                <span style="font-weight: 700; color: #f59e0b; font-size: 13px;">MIOTY TS-UNB (Long Range 2.4 GHz)</span>
+                            </div>
+                            <span style="font-size: 10px; color: var(--text-secondary);">${m.profile}</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="hw-field">
+                                <div class="hw-field-label">Device EUI64</div>
+                                <div class="hw-code-box"><span>${m.eui64}</span></div>
+                            </div>
+                            <div class="hw-field">
+                                <div class="hw-field-label">Network Key</div>
+                                <div class="hw-code-box"><span style="font-size: 10.5px;">${m.network_key}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <!-- Device Overview Card -->
+                <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 16px; color: var(--text-primary); font-weight: 600;">${info.device_name}</h3>
+                        <p style="margin: 3px 0 0 0; font-size: 12px; color: var(--text-secondary);">${info.hardware}</p>
+                    </div>
+                    <div style="font-family: monospace; font-size: 11px; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); color: var(--accent-color-1);">
+                        Firmware: ${info.firmware_source}
+                    </div>
+                </div>
+
+                <!-- Google Section -->
+                <div class="hw-section-card" style="border-left: 3px solid #10b981;">
+                    <div class="hw-section-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                            <span style="font-weight: 700; color: #10b981; font-size: 13px;">GOOGLE FIND MY DEVICE NETWORK (FMDN)</span>
+                        </div>
+                        <span style="font-size: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; padding: 2px 7px; border-radius: 4px; font-weight: 700;">UUID: ${g.service_uuid}</span>
+                    </div>
+
+                    <div class="hw-field">
+                        <div class="hw-field-label">Advertising BLE MAC Address (Customizable in Firmware)</div>
+                        <div class="hw-mac-edit-row">
+                            <input type="text" id="hwGoogleMacInput" class="hw-mac-input" value="${g.mac_address}" maxlength="17" placeholder="AC:BB:CC:DD:EE:FF">
+                            <button class="hw-save-btn" onclick="saveMacOverride('${info.device_name}')">Save Override</button>
+                            <button class="hw-copy-btn" onclick="copyToClipboard('${g.mac_c_array}', this)">Copy C Array</button>
+                        </div>
+                        <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+                            <strong style="color: #10b981;">Customization Rule:</strong> ${g.note}
+                        </div>
+                    </div>
+
+                    <div class="hw-field">
+                        <div class="hw-field-label">Flashed 20-Byte Ephemeral Identifier (EID)</div>
+                        <div class="hw-code-box">
+                            <span style="font-weight: 600; letter-spacing: 0.5px;">${g.eid_hex}</span>
+                            <button class="hw-copy-btn" onclick="copyToClipboard('${g.eid_c_array}', this)">Copy C Array</button>
+                        </div>
+                        <div style="font-family: monospace; font-size: 10.5px; color: var(--text-secondary); margin-top: 3px; word-break: break-all;">
+                            C code: <span style="color: #e2e8f0;">${g.eid_c_array}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apple Section -->
+                ${appleHtml}
+
+                <!-- Mioty Section -->
+                ${miotyHtml}
+
+                <!-- Network vs On-Air Cheat Sheet -->
+                <div class="hw-section-card" style="background: rgba(0, 242, 254, 0.02); border-color: rgba(0, 242, 254, 0.2);">
+                    <div class="hw-section-header">
+                        <span style="font-weight: 700; color: var(--accent-color-1); font-size: 13px;">TELEMETRY DATA ORIGIN & MAC ADDRESS ARCHITECTURE</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 12px; margin-top: 4px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 700; color: #10b981; margin-bottom: 6px;">Obtained from Cloud Network:</div>
+                            <ul style="margin: 0; padding-left: 18px; color: var(--text-secondary); line-height: 1.6;">
+                                <li><strong style="color: var(--text-primary);">GPS Coordinates</strong> (Latitude & Longitude)</li>
+                                <li><strong style="color: var(--text-primary);">Horizontal Accuracy</strong> (meters radius)</li>
+                                <li><strong style="color: var(--text-primary);">Spotted Timestamp</strong> (UTC epoch seconds)</li>
+                                <li><strong style="color: var(--text-primary);">Network Status</strong> (Active, Crowdsourced)</li>
+                                <li style="color: #ef4444; margin-top: 4px;"><strong>MAC Address is NEVER returned</strong>: Google and Apple intentionally strip all MAC addresses on finder phones before upload to protect user privacy.</li>
+                            </ul>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 700; color: #0a84ff; margin-bottom: 6px;">Transmitted On-Air by STM32:</div>
+                            <ul style="margin: 0; padding-left: 18px; color: var(--text-secondary); line-height: 1.6;">
+                                <li><strong style="color: var(--text-primary);">BLE MAC Address</strong> in the 6-byte PDU header</li>
+                                <li><strong style="color: var(--text-primary);">Google FMDN</strong>: 20-byte EID payload</li>
+                                <li><strong style="color: var(--text-primary);">Apple Find My</strong>: 22-byte public key fragment</li>
+                                <li style="color: #38bdf8; margin-top: 4px;"><strong>Editing Rules</strong>: Google MAC can be changed to any arbitrary address. Apple MAC <em>must</em> match public key bytes [0:5].</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function saveMacOverride(deviceName) {
+            const input = document.getElementById('hwGoogleMacInput');
+            if (!input) return;
+            const newMac = input.value.trim().toUpperCase();
+            if (!/^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/.test(newMac)) {
+                alert('Please enter a valid MAC address format (e.g. AC:BB:CC:DD:EE:FF)');
+                return;
+            }
+            
+            if (!hardwareInfoCache) hardwareInfoCache = {};
+            if (!hardwareInfoCache[deviceName]) hardwareInfoCache[deviceName] = { google: {} };
+            if (!hardwareInfoCache[deviceName].google) hardwareInfoCache[deviceName].google = {};
+
+            hardwareInfoCache[deviceName].google.mac_address = newMac;
+            const bytes = newMac.split(/[:-]/).map(b => '0x' + b);
+            hardwareInfoCache[deviceName].google.mac_c_array = '{' + bytes.join(', ') + '}';
+
+            fetch('/api/ble/hardware-info', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(hardwareInfoCache)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showHwToast(`Saved Google MAC for ${deviceName}: ${newMac}`);
+                    renderHardwareModal(deviceName);
+                } else {
+                    alert('Failed to save: ' + data.message);
+                }
+            })
+            .catch(err => alert('Save error: ' + err.message));
+        }
+
+        function copyToClipboard(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                if (btnElement) {
+                    const orig = btnElement.innerText;
+                    btnElement.innerText = 'Copied!';
+                    setTimeout(() => { btnElement.innerText = orig; }, 1800);
+                }
+                showHwToast('Copied to clipboard!');
+            }).catch(() => {
+                showHwToast('Failed to copy');
+            });
+        }
+
+        function showHwToast(msg) {
+            const toast = document.getElementById('hwToast');
+            if (!toast) return;
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 2500);
+        }
+
+        // Startup functions
+        window.onload = () => {
+            initMap();
+            loadHardwareInfo();
+            fetchDeviceLocations();
+
+            // Setup auto-refresh every 2 minutes
+            setInterval(() => {
+                console.log("[Auto-Refresh] Triggering automatic location check...");
+                fetchDeviceLocations();
+            }, 120000);
+        };
+    </script>
+
+    <!-- Floating Telemetry Data Modal Dialog -->
+    <div id="dataModal" class="modal-overlay" onclick="handleModalBackdropClick(event)">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(0, 242, 254, 0.12); border: 1px solid rgba(0,242,254,0.3); display: flex; align-items: center; justify-content: center;">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: var(--accent-color-1);">
+                            <path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm0 4v3h4V7H4zm6 0v3h10V7H10zm10 5H10v3h10v-3zm-12 0H4v3h4v-3zm0 5H4v2h4v-2zm2 2h10v-2H10v2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 style="font-size: 17px; font-weight: 600; margin: 0; color: var(--text-primary);">Telemetry Data Records</h2>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Multi-Network GPS Coordinates, Sources & Timestamps</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="/api/ble/export/csv" download class="refresh-btn" style="text-decoration: none; padding: 7px 13px; font-size: 12px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-primary); box-shadow: none;">
+                        <svg viewBox="0 0 24 24" style="width: 13px; height: 13px; fill: currentColor;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        Download CSV
+                    </a>
+                    <button class="modal-close-btn" onclick="closeDataModal()" title="Close">✕</button>
+                </div>
+            </div>
+            
+            <!-- Filter Bar -->
+            <div class="modal-toolbar">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <label style="font-size: 12px; color: var(--text-secondary);">Source:</label>
+                    <select id="modalSourceFilter" onchange="renderModalTable()" class="modal-select">
+                        <option value="all">All Networks</option>
+                        <option value="apple">Apple Find My</option>
+                        <option value="google">Google Find My</option>
+                    </select>
+                    <label style="font-size: 12px; color: var(--text-secondary); margin-left: 8px;">Device:</label>
+                    <select id="modalDeviceFilter" onchange="renderModalTable()" class="modal-select">
+                        <option value="all">All Devices</option>
+                    </select>
+                </div>
+                <div id="modalSummaryCount" style="font-size: 12px; color: var(--text-secondary);"></div>
+            </div>
+
+            <!-- Table container -->
+            <div class="modal-table-container">
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Device</th>
+                            <th>Network</th>
+                            <th>Coordinates (Lat, Lon)</th>
+                            <th>Timestamp</th>
+                            <th>Accuracy</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Hardware & Flashed Payload Info Modal Dialog -->
+    <div id="hardwareModal" class="modal-overlay" onclick="handleHwModalBackdropClick(event)">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); display: flex; align-items: center; justify-content: center;">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #10b981;">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 style="font-size: 17px; font-weight: 600; margin: 0; color: var(--text-primary);">Tag Hardware & Payload Specs</h2>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Flashed MCU Keys, BLE MAC Addresses & Network Telemetry Rules</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <label style="font-size: 12px; color: var(--text-secondary);">Device:</label>
+                        <select id="hwDeviceSelect" onchange="onHwDeviceSelectChange()" class="modal-select"></select>
+                    </div>
+                    <button class="modal-close-btn" onclick="closeHardwareModal()" title="Close">✕</button>
+                </div>
+            </div>
+
+            <!-- Modal Body injected dynamically -->
+            <div id="hwModalContent" class="hw-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="hwToast" class="hw-toast">Saved</div>
+</body>
+</html>

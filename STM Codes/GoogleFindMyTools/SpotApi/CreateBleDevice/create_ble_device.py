@@ -89,3 +89,5 @@ def register_esp32():
     print("|" + " " * 19 + eid.hex() + " " * 19 + "|")
     print("|" + " " * 30 + "Advertisement Key" + " " * 31 + "|")
     print("+" + "-" * 78 + "+")
+    
+    return eid.hex()

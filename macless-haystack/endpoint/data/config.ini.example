@@ -1,0 +1,15 @@
+[Settings]
+port=6176
+binding_address=127.0.0.1
+anisette_url=http://127.0.0.1:6969
+loglevel=DEBUG
+
+# Enter your Apple ID email here.
+# Running mh_endpoint.py will prompt for password and 2FA code interactively.
+appleid=YOUR_APPLE_ID@example.com
+appleid_pass=
+cert=certificate.pem
+priv_key=privkey.pem
+
+endpoint_user=
+endpoint_pass=

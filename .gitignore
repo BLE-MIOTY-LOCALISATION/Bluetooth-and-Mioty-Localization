@@ -1,0 +1,60 @@
+# ==========================================
+# Security & Credentials (CRITICAL - DO NOT COMMIT)
+# ==========================================
+**/secrets.json
+**/auth.json
+**/keys.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Macless-Haystack endpoint local data & active config
+macless-haystack/endpoint/data/auth.json
+macless-haystack/endpoint/data/keys.json
+macless-haystack/endpoint/data/*.pem
+macless-haystack/endpoint/data/config.ini
+
+# Google Find My credentials
+STM Codes/GoogleFindMyTools/Auth/secrets.json
+
+# ==========================================
+# Python & Virtual Environments
+# ==========================================
+**/__pycache__/
+*.py[cod]
+*$py.class
+venv/
+**/venv/
+.env
+
+# ==========================================
+# IDE & Build Artifacts (STM32CubeIDE / Keil / Eclipse)
+# ==========================================
+**/Debug/
+**/Release/
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.d
+*.su
+.metadata/
+*.launch.bak
+
+# ==========================================
+# KiCad Backups & Locks
+# ==========================================
+**/*-backups/
+*.kicad_pcb.lck
+*.kicad_prl
+
+# ==========================================
+# Operating System & Temporary Files
+# ==========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.log

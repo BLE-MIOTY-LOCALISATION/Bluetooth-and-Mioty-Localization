@@ -1,8 +1,6 @@
-# Walkthrough: Google Find My Device Location API & Leaflet Dashboard
+# Dual-Network Tracker Dashboard: Google Find My + Apple Find My + Mioty
 
-This directory implements a Python location service, a Flask REST API, and an interactive **Leaflet.js visual map dashboard** for querying tracker positions reported through the Google Find My Device Network (FMDN).
-
-It reuses `GoogleFindMyTools` dependencies, configuration, and end-to-end encrypted Google auth keys, vendored locally at the project root (`Sx-1280-bring up local\GoogleFindMyTools`) so this project is self-contained and does not depend on any path outside the repo.
+This directory implements a Python location service, a Flask REST API, and an interactive **Leaflet.js visual map dashboard** for querying tracker positions crowdsourced across both the **Google Find My Device Network (FMDN)** and the **Apple Find My Network (Offline Finding)**, alongside Mioty long-range RF capabilities.
 
 ---
 
@@ -10,124 +8,104 @@ It reuses `GoogleFindMyTools` dependencies, configuration, and end-to-end encryp
 
 ```
 location_api/
-├── requirements.txt            ← Specifies dependency flask & flask-cors
+├── requirements.txt            ← Specifies Flask dependencies
 ├── fmdn_client.py              ← Coordinates Google Find My query & decrypts reports
-├── ble_location_service.py     ← Manages device caches & retrieves most recent location
+├── ble_location_service.py     ← Aggregates & decrypts Google + Apple telemetry
+├── device_hardware_config.json ← Flashed hardware specs, EIDs, MACs, & keys
 ├── app.py                      ← Flask API server & static file host (port 5000)
+├── setup.ps1                   ← One-time virtualenv setup script
+├── run_dashboard.ps1           ← Quick-launcher script
 ├── static/
-│   └── index.html              ← Dashboard UI (Leaflet.js map + sidebar + glassmorphism CSS)
+│   ├── index.html              ← Landing page / Key generation wizard
+│   └── dashboard.html          ← Dual-network map dashboard + Tag Keys modal + Telemetry CSV
 └── walkthrough.md              ← This document
 ```
 
 ---
 
-## 2. Components
+## 2. First-Time Setup for Cloners / Colleagues
 
-### Flask Server (`app.py` & static hosting)
-- Mounts static files from `location_api/static/`, served at path `/static`.
-- `GET /` maps to the dashboard's HTML entry point.
-- `debug=False` prevents double-execution of background FCM messaging threads (avoids socket/listener conflicts).
+> [!NOTE]
+> All live session tokens, keys, and credentials (`secrets.json`, `auth.json`, `keys.json`, `.pem`) are intentionally **git-ignored** for privacy and security. Follow these steps to initialize your local instance.
 
-### Interactive Frontend Dashboard (`static/index.html`)
-- **Map interaction, colors & selective rendering**:
-  - Loads the registered device list on start; force-refreshes from Google with `?refresh=true` via the sidebar "Refresh" button.
-  - **Dynamic color coding**: assigns a unique neon color theme per device (Cyan, Green, Gold, Coral Red, Purple), applied to its card indicators, badges, active border, map path, and marker rings.
-  - **Selective rendering**: markers, accuracy circles, and history trails are shown only for the active selected device. Selecting another device clears the map and flies the view to its position.
-  - **Dashed history trails**: a colored dashed line connects historical location reports chronologically.
-  - **Interactive coordinate nodes**: small markers along the trail show time and accuracy in a popup on click.
-  - **Pulsing latest node**: a large pulsing neon marker on the most recent position, linking to Google Maps.
-  - **In-card telemetry log**: expandable, scrollable table of historical coordinates and timestamps per device.
-  - Auto-refreshes in the background every 2 minutes.
+### Prerequisites
+1. **Windows 10/11** with PowerShell
+2. **Python 3.10+** (added to PATH)
+3. **Google Chrome** (for Google Find My interactive OAuth login)
+4. **Docker Desktop** (for Apple Anisette v3 server)
 
 ---
 
-## 3. API Endpoints
-
-Served on port `5000`:
-
-* **`GET /`**
-  - Serves the visual tracking map dashboard.
-* **`GET /api/ble/devices`**
-  - Returns all registered tracker names in the active Google account.
-* **`GET /api/ble/location/<device_name>`**
-  - Retrieves and decrypts location telemetry for the device.
-  - **Query parameters**:
-    - `history=true` (optional): returns the full array of decrypted locations for the tag, sorted by time descending, in a `history` list (instead of just the single latest point).
-    - `refresh=true` (optional): force-updates the local cached device list from Google before executing the query.
+### Step 1: Start Apple Anisette v3 Server (Docker)
+Apple Find My queries require authentic Anisette headers (ADI). Run this once:
+```powershell
+docker run -d --restart always --name anisette -p 6969:6969 dadoum/anisette-v3-server:latest
+```
+*Verify:* Open `http://127.0.0.1:6969/v3/reprovision` in a browser — it should return valid JSON.
 
 ---
 
-## 4. Example Requests & Responses
-
-### `GET /`
-```bash
-curl.exe -s -I http://127.0.0.1:5000/
+### Step 2: Initialize Python Virtual Environment
+From `STM Codes\7_ble_mioty_FMDN_tracker\location_api`:
+```powershell
+.\setup.ps1
 ```
-```http
-HTTP/1.1 200 OK
-Server: Werkzeug/3.1.8 Python/3.11.9
-Content-Disposition: inline; filename=index.html
-Content-Type: text/html; charset=utf-8
-Content-Length: 25627
-```
-
-### `GET /api/ble/devices`
-```bash
-curl.exe -s http://127.0.0.1:5000/api/ble/devices
-```
-```json
-{"devices":["Tracker A","Tracker B","Tracker C"],"status":"success"}
-```
-
-### `GET /api/ble/location/<device_name>`
-```bash
-curl.exe -s "http://127.0.0.1:5000/api/ble/location/Tracker%20A"
-```
-```json
-{
-  "accuracy_meters": 100.0,
-  "altitude": 335,
-  "canonic_id": "00000000-0000-0000-0000-000000000000",
-  "device_name": "Tracker A",
-  "google_maps_link": "https://www.google.com/maps/search/?api=1&query=<lat>,<lon>",
-  "is_own_report": true,
-  "latitude": 0.0,
-  "longitude": 0.0,
-  "source": "ble",
-  "status": "LAST_KNOWN",
-  "timestamp": 0,
-  "timestamp_readable": "YYYY-MM-DD HH:MM:SS",
-  "type": "geo"
-}
+Install the Apple endpoint dependencies:
+```powershell
+.\venv\Scripts\pip.exe install -r ..\..\..\macless-haystack\endpoint\requirements.txt
 ```
 
 ---
 
-## 5. First-Time Setup
-
-Neither the virtual environment nor your Google auth token are committed to git (both are gitignored — see `GoogleFindMyTools/.gitignore`), so **every person who clones this repo needs to do this setup once**, using their own Google account. Full walkthrough (one setup script + the one-time Google login) lives in `../FMDN_tracker.md`, "Step 0: One-Time Environment Setup" — follow that first.
-
-Short version, from this folder:
-```bash
-.\setup.ps1                                       # creates ./venv, installs everything
-.\venv\Scripts\python.exe ..\..\GoogleFindMyTools\main.py   # one-time interactive Google login
+### Step 3: Google Find My Device Authentication
+Log into the shared project Google account:
+```powershell
+.\venv\Scripts\python.exe ..\..\GoogleFindMyTools\main.py
 ```
+- A Chrome window opens automatically.
+- Sign in with the project Google account.
+- This creates your local `GoogleFindMyTools\Auth\secrets.json`.
 
-You'll only see devices registered to *your own* Google account. To see a specific tracker (e.g. someone else's hardware), it needs to be registered/shared to your account first — auth tokens are inherently per-account and aren't something that should be shared between people.
+---
 
-## 6. How to Launch
-
-1. From `location_api/`:
-   ```bash
-   .\run_dashboard.ps1
+### Step 4: Apple Find My Authentication & Keys
+1. In `macless-haystack\endpoint\data\`:
+   - Copy `config.ini.example` to `config.ini`.
+   - Set `appleid = YOUR_PROJECT_APPLE_ID@example.com`.
+2. In `macless-haystack\endpoint\data\keys.json`:
+   - Create `keys.json` with the shared base64 private key:
+     ```json
+     [
+       {
+         "privateKey": "yBPO7ho0j+BXdGmiRge+NtcY0Vw3hlXsU67SIw=="
+       }
+     ]
+     ```
+3. Authenticate with Apple 2FA:
+   ```powershell
+   cd ..\..\..\macless-haystack\endpoint
+   ..\..\STM Codes\7_ble_mioty_FMDN_tracker\location_api\venv\Scripts\python.exe mh_endpoint.py
    ```
-2. Flask prints its own startup output, including a `WARNING: This is a development server...` line — that's standard boilerplate, safe to ignore for local/personal use, not a sign anything is wrong. It then lists **two addresses** (`app.py` binds to `0.0.0.0`, all network interfaces, not just this machine):
+   - Enter password and the 2FA SMS/device verification code when prompted in the terminal.
+   - Once authenticated, it saves `data/auth.json` and listens on port `6176`.
+   - **Keep this terminal window running!**
 
-   | Address | Reachable from | Use it for |
-   | :--- | :--- | :--- |
-   | `http://127.0.0.1:5000/` | Only this computer | Normal local use — default choice |
-   | `http://<other IP>:5000/` (e.g. `192.168.x.x`) | Any device on the same WiFi/network | Checking the dashboard from another device (e.g. your phone) |
+---
 
-   The dashboard shows real device location data. Only use the second (LAN) address on a network you actually trust — never on shared/public WiFi (university, cafe, etc.), since anyone else on that network could browse straight to it with no login of their own required.
-3. Open the address you chose in a browser. The dashboard fetches your active Google account's tracker devices and draws their positions live on the map.
-4. Press `Ctrl+C` in the terminal to stop the server.
+### Step 5: Launch the Dashboard
+In a separate terminal:
+```powershell
+cd "STM Codes\7_ble_mioty_FMDN_tracker\location_api"
+.\run_dashboard.ps1
+```
+Open **[http://127.0.0.1:5000/dashboard](http://127.0.0.1:5000/dashboard)** in your browser!
+
+---
+
+## 3. Flashing Hardware (STM32 + SX1280)
+
+- **Firmware Project:** [`STM Codes/10_apple_google_mioty_tracker/`](file:///c:/Users/rohit/OneDrive/Documents/FAU/BLE%20MIOTY/Bluetooth-and-Mioty-Localization/STM%20Codes/10_apple_google_mioty_tracker)
+- **Parameters:** Click the **Tag Keys** button on the web dashboard to inspect the exact C arrays for:
+  - Google Ephemeral ID (`fmdn_eid[20]`)
+  - Apple Find My public key & bound MAC address (`mac[5] = pub_key[0] | 0xC0`)
+  - Mioty EUI64 and 128-bit network encryption key
